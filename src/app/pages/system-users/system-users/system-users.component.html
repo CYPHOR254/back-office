@@ -1,0 +1,23 @@
+
+
+<nav class="navbar navbar-expand-lg mb-3 navbar-shadow">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/system-users/all-system-users']" routerLinkActive="active-nav" [routerLinkActiveOptions]="{ exact: true }">All System Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" [routerLink]="['/system-users/all-system-users/blocked-system-users']" routerLinkActive="active-nav">Blocked Users</a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+<div class="container-fluid">
+  <div class="col-md-12 col-xl-12">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+

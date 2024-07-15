@@ -1,0 +1,335 @@
+<div class="table-responsive">
+  <div
+    *ngIf="!disableFilters"
+    class="d-flex flex-row justify-content-between align-items-center"
+  >
+    <div class="d-flex flex-row flex-wrap">
+      <input
+        (keydown)="updateFilter()"
+        (keyup)="updateFilter()"
+        *ngFor="let col of filterColumns"
+        [id]="col.prop"
+        [placeholder]="col.name"
+        class="form-control wd-150 border m-1 filterInputs form-control-sm"
+        type="text"
+      />
+
+      <select
+        (change)="updateFilter()"
+        *ngFor="let colm of toggleFilters"
+        [id]="colm.prop"
+        class="form-select m-1 wd-150 border filterSelect form-select-sm"
+      >
+        <option disabled selected value="">
+          {{ colm["name"] }}
+        </option>
+
+        <ng-container *ngFor="let opt of colm['options']">
+          <option [value]="opt['val']">{{ opt["label"] }}</option>
+        </ng-container>
+      </select>
+
+
+    </div>
+
+    <button
+      (click)="clearFilters()"
+      class="btn btn-sm bg-danger clearFilt text-white"
+    >
+      <p class="text-white m-0 p-0"><i class="bi bi-x"></i> Clear Filter</p>
+
+    </button>
+  </div>
+
+  <ngx-datatable
+    #table
+    [columnMode]="ColumnMode.force"
+    [columns]="columns"
+    [footerHeight]="50"
+    [headerHeight]="50"
+    [limit]="pageSize"
+    [loadingIndicator]="loadingIndicator"
+    [rowHeight]="43"
+    [rows]="rows"
+    [scrollbarH]="true"
+    [sorts]="[{ prop: 'id', dir: 'desc' }]"
+    class="bootstrap table-responsive table table-striped table-striped-columns"
+  >
+    <ng-container *ngFor="let column of plainColumns">
+      <ngx-datatable-column
+        [draggable]="false"
+        [maxWidth]="column.maxW"
+        [minWidth]="column.minW"
+        [resizeable]="false"
+        name="{{ column.name }}"
+        prop="{{ column.prop }}"
+      >
+      </ngx-datatable-column>
+    </ng-container>
+
+    <ng-container *ngFor="let column of modColumns">
+      
+
+      <ngx-datatable-column
+        *ngIf="column.name === 'Actions' && actions.length > 0"
+        [draggable]="false"
+        [resizeable]="false"
+        [sortable]="false"
+        name="Actions"
+        prop="actions"
+      >
+        <ng-template
+          class="parent-item"
+          let-row="row"
+          let-value="value"
+          ngx-datatable-cell-template
+        >
+          <span class="parent-item m-auto">
+            <ng-template #buttons>
+              <ul class="list-group list-group-flush">
+                <li
+                  (click)="sendEvent(row, action)"
+                  *ngFor="let action of actions; index as i"
+                  class="action-buttons list-group-item pt-1 pb-1 text-center"
+                >
+                  {{ action }}
+                </li>
+              </ul>
+            </ng-template>
+            <div class="example m-auto">
+              <button
+                [ngbPopover]="buttons"
+                class="btn btn-primary btn-sm m-auto"
+                placement="left-top"
+                style="margin: 0 10px !important"
+                type="button"
+              >
+                <i class="bi bi-chevron-down"></i>
+                Actions
+              </button>
+            </div>
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        *ngIf="column.prop === 'deviceStatus'"
+        [draggable]="false"
+        [maxWidth]="100"
+        [minWidth]="100"
+        [name]="column.name"
+        [prop]="column.prop"
+        [resizeable]="false"
+      >
+        <ng-template
+          let-row="row"
+          let-value="value"
+          ngx-datatable-cell-template
+        >
+          <span
+            class="{{
+              row.deviceStatus === true
+                ? 'badge bg-success mr-1'
+                : 'badge bg-danger mr-1'
+            }}"
+          >
+            {{ row.deviceStatus == true ? "Active" : "Inactive" }}</span
+          >
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        *ngIf="column.name === 'Ip'"
+        [draggable]="false"
+        [maxWidth]="50"
+        [minWidth]="50"
+        [name]="column.name"
+        [prop]="column.prop"
+        [resizeable]="false"
+      >
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        *ngIf="column.prop === 'schoolStatus'"
+        [draggable]="false"
+        [maxWidth]="120"
+        [minWidth]="100"
+        [name]="column.name"
+        [prop]="column.prop"
+        [resizeable]="false"
+      >
+        <ng-template
+          let-row="row"
+          let-value="value"
+          ngx-datatable-cell-template
+        >
+          <span
+            [ngStyle]="{
+              'background-color': getStatusColor(row?.status),
+              color: 'white',
+              'font-size': '10px',
+              padding: '2px',
+              'border-radius': '5px',
+              'margin-right': '5px'
+            }"
+          >
+            {{ row?.status }}
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        *ngIf="column.prop === 'blocked'"
+        [draggable]="false"
+        [maxWidth]="100"
+        [minWidth]="100"
+        [name]="column.name"
+        [prop]="column.prop"
+        [resizeable]="false"
+      >
+        <ng-template
+          let-row="row"
+          let-value="value"
+          ngx-datatable-cell-template
+        >
+          <span
+            class="{{
+              row.blocked === '0'
+                ? 'badge bg-success mr-1'
+                : 'badge bg-danger mr-1'
+            }}"
+          >
+            {{ row.blocked === "1" ? "Blocked" : "Active" }}</span
+          >
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        *ngIf="column.prop === 'firstTimeLogin'"
+        [draggable]="false"
+        [maxWidth]="110"
+        [minWidth]="100"
+        [name]="column.name"
+        [prop]="column.prop.toLowerCase()"
+        [resizeable]="false"
+      >
+        <ng-template
+          let-row="row"
+          let-value="value"
+          ngx-datatable-cell-template
+        >
+          <span
+            class="{{
+              row.firstTimeLogin === true
+                ? 'badge bg-success mr-1'
+                : 'badge bg-danger mr-1'
+            }}"
+          >
+            {{ row.firstTimeLogin === true ? "Yes" : "No" }}</span
+          >
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        *ngIf="column.prop === 'systemRole'"
+        [draggable]="false"
+        [maxWidth]="100"
+        [minWidth]="100"
+        [prop]="column.prop"
+        [resizeable]="false"
+        name="Role Type"
+      >
+        <ng-template
+          let-row="row"
+          let-value="value"
+          ngx-datatable-cell-template
+        >
+          {{ row.d }}
+          <span
+            class="{{
+              row.systemRole === true
+                ? 'badge bg-primary mr-1'
+                : 'badge bg-success mr-1'
+            }}"
+          >
+            {{ row.systemRole === true ? "System Role" : "Custom Role" }}</span
+          >
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        *ngIf="column.prop === 'channel'"
+        [draggable]="false"
+        [maxWidth]="100"
+        [minWidth]="100"
+        [name]="column.name"
+        [prop]="column.prop"
+        [resizeable]="false"
+      >
+        <ng-template
+          let-row="row"
+          let-value="value"
+          ngx-datatable-cell-template
+        >
+          {{ row.d }}
+          <span
+            class="{{
+              row.channel === 'PORTAL'
+                ? 'badge bg-primary mr-1'
+                : 'badge bg-success mr-1'
+            }}"
+          >
+            {{ row.channel }}</span
+          >
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        *ngIf="
+          column.prop === 'createdOn' ||
+          column.prop === 'createdAt' ||
+          column.prop === 'updatedOn' ||
+          column.prop === 'updatedAt'
+        "
+        [draggable]="false"
+        [maxWidth]="100"
+        [minWidth]="50"
+        [name]="column.name"
+        [prop]="column.prop"
+        [resizeable]="false"
+      >
+      </ngx-datatable-column>
+    </ng-container>
+
+    <ngx-datatable-footer>
+      <ng-template
+        let-curPage="curPage"
+        let-isVisible="isVisible"
+        let-offset="offset"
+        let-pageSize="pageSize"
+        let-rowCount="rowCount"
+        let-selectedCount="selectedCount"
+        ngx-datatable-footer-template
+      >
+        <select
+          (change)="changePageSize(false, $event)"
+          class="form-select ms-2 w-auto"
+        >
+          <option *ngFor="let size of pageSizes" [value]="size">
+            {{ size === 1000 ? "All " : size }} Items
+          </option>
+        </select>
+        <datatable-pager
+          (change)="table.onFooterPage($event)"
+          [count]="rowCount"
+          [page]="curPage"
+          [pagerLeftArrowIcon]="'bi bi-arrow-left-square'"
+          [pagerNextIcon]="'bi bi-skip-forward-fill'"
+          [pagerPreviousIcon]="'bi bi-skip-backward-fill'"
+          [pagerRightArrowIcon]="'bi bi-arrow-right-square'"
+          [size]="pageSize"
+        ></datatable-pager>
+      </ng-template>
+    </ngx-datatable-footer>
+  </ngx-datatable>
+</div>

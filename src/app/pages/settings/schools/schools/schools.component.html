@@ -1,0 +1,60 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary mb-3 navbar-shadow">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a
+            class="nav-link settings"
+            aria-current="page"
+            [routerLink]="['/settings/schools']"
+            routerLinkActive="active-nav"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            Category
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link settings"
+            [routerLink]="['/settings/schools/school-curriculum']"
+            routerLinkActive="active-nav"
+          >
+            Curriculum
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link settings"
+            [routerLink]="['/settings/schools/school-types']"
+            routerLinkActive="active-nav"
+          >
+            Type
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link settings"
+            [routerLink]="['/settings/schools/school-gender']"
+            routerLinkActive="active-nav"
+          >
+            Gender
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link settings"
+            [routerLink]="['/settings/schools/school-designation']"
+            routerLinkActive="active-nav"
+          >
+            Designation
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container-fluid">
+  <div class="col-md-12 col-xl-12">
+    <router-outlet></router-outlet>
+  </div>
+</div>

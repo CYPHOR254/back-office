@@ -1,0 +1,57 @@
+<div class="container mb-5 mt-3">
+  <h6 class="mb-3">
+    {{
+      getFullName(partnerDetails?.firstName, partnerDetails?.lastName)
+    }}
+    Details
+  </h6>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-5 col-md-6">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Name:</span>
+              <span class="text-right p-1">{{
+                getFullName(partnerDetails?.firstName, partnerDetails?.lastName)
+              }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Email:</span>
+              <span class="text-right p-1">{{ partnerDetails?.email }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Phone Number:</span>
+              <span class="text-right p-1">{{
+                partnerDetails?.phoneNumber | uppercase
+              }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-5 .offset-sm-2 .col-md-6 .offset-md-0">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">ID Number:</span>
+              <span class="text-right p-1">{{
+                partnerDetails?.idNumber 
+              }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Created On:</span>
+              <span class="text-right p-1">{{ partnerDetails?.createdOn | date: 'medium' }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Created By:</span>
+              <span class="text-right p-1">{{
+                partnerDetails?.createdBy | titlecase
+              }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>

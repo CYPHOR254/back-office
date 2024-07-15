@@ -1,0 +1,40 @@
+<div class="card-body">
+  <div class="row">
+    <ul
+      ngbNav
+      #fillJustifyNav="ngbNav"
+      class="nav-tabs justify-content-start navbar-shadow"
+      [(activeId)]="activeId"
+    >
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>Agent Details</a>
+        <ng-template ngbNavContent>
+          <app-agent-details [agentId]="agentId"></app-agent-details>
+        </ng-template>
+      </li>
+
+      <li [ngbNavItem]="4">
+        <a ngbNavLink>Schools Added</a>
+        <ng-template ngbNavContent>
+          <app-list-schools [agentId]="agentId"></app-list-schools>
+        </ng-template>
+      </li>
+      <!-- <li [ngbNavItem]="3">
+        <a ngbNavLink>Login History</a>
+        <ng-template ngbNavContent>
+          <app-agent-login-history
+            [agentId]="agentId"
+          ></app-agent-login-history>
+        </ng-template>
+      </li> -->
+      <!-- <li [ngbNavItem]="2">
+        <a ngbNavLink>Agent System Log</a>
+        <ng-template ngbNavContent>
+          <app-agent-system-logs [agentId]="agentId"></app-agent-system-logs>
+        </ng-template>
+      </li> -->
+    </ul>
+
+    <div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-0"></div>
+  </div>
+</div>

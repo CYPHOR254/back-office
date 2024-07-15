@@ -1,0 +1,56 @@
+<div class="container mb-4">
+  <nav class="page-breadcrumb mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a routerLink="/schools/list-schools">Schools</a>
+      </li>
+      <li aria-current="page" class="breadcrumb-item active">View Contact</li>
+    </ol>
+  </nav>
+  <div class="col-12 col-md-4 mb-2">
+    <h6 class="mb-2">{{ contactList?.name }} Details</h6>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-5 col-md-6">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Name:</span>
+              <span class="text-right p-1">{{ contactList?.name }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Email:</span>
+              <span class="text-right p-1">{{
+                contactList?.emailAddress
+              }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Phone Number:</span>
+              <span class="text-right p-1">{{
+                contactList?.phoneNumber | titlecase
+              }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-5 .offset-sm-2 .col-md-6 .offset-md-0">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">School:</span>
+              <span class="text-right p-1">{{
+                contactList?.school | titlecase
+              }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Designation:</span>
+              <span class="text-right p-1">{{
+                contactList?.designation | titlecase
+              }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="container">
+    <h2>School Types Management</h2>
+    <div class="text-right mb-2">
+      <button (click)="openAddSchoolTypeModal()" class="btn btn-primary">Add School Type</button>
+    </div>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>School Type</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let schoolType of schoolTypes">
+          <td>{{ schoolType.name }}</td>
+          <td>
+            <button (click)="openEditSchoolTypeModal(schoolType)" class="btn btn-warning" style="margin-left: 10px;">Edit</button>
+            <button (click)="deleteSchoolType(schoolType.schoolTypeId)" class="btn btn-danger" style="margin-left: 10px;">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Add School Type Modal -->
+    <div class="modal fade" id="addSchoolTypeModal" tabindex="-1" aria-labelledby="addSchoolTypeModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addSchoolTypeModalLabel">Add School Type</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="addSchoolTypeForm" (ngSubmit)="onAddSubmit()">
+              <div class="mb-3">
+                <label for="name" class="form-label">School Type</label>
+                <input type="text" class="form-control" id="name" formControlName="name">
+              </div>
+              <button type="submit" class="btn btn-primary" [disabled]="!addSchoolTypeForm.valid">Save changes</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-left: 15px;">Cancel</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Edit School Type Modal -->
+    <div class="modal fade" id="editSchoolTypeModal" tabindex="-1" aria-labelledby="editSchoolTypeModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editSchoolTypeModalLabel">Edit School Type</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="editSchoolTypeForm" (ngSubmit)="onEditSubmit()">
+              <div class="mb-3">
+                <label for="name" class="form-label">School Type</label>
+                <input type="text" class="form-control" id="name" formControlName="name">
+              </div>
+              <button type="submit" class="btn btn-primary" [disabled]="!editSchoolTypeForm.valid">Save changes</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-left: 15px;">Cancel</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

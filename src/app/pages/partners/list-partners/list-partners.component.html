@@ -1,0 +1,48 @@
+
+
+<section class="section">
+  <div class="d-flex justify-content-between  mb-2">
+    <div class="pagetitle">
+      <h1>Partners</h1>
+    </div>
+    <app-custom-tbl-header
+      [rows]="partnersList$ | async"
+      [allColumns]="allColumns"
+      [rows]="filteredRows.length > 0 ? filteredRows : rows"
+      [title]="title"
+      (searchResultsEvent)="searchResultUniversal($event)"
+      (filterDateEvent)="searchResultByDate($event)"
+      [showAddButton]="true"
+      (openAddModalEvent)="addPartner()"
+      (changeColumnsEvent)="updateColumns($event)"
+    ></app-custom-tbl-header>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card p-1">
+        <div class="table-responsive" *ngIf="!loading">
+          <app-custom-tbl
+            [columns]="columns"
+            [rows]="partnersList$ | async"
+            [rows]="rows"
+            [loadingIndicator]="false"
+            [totalItems]="totalRecords"
+            [actions]="actions"
+            (outputEvent)="triggerEvent($event)"
+            (updateFilteredRows)="updateFilteredRowsEvent($event)"
+          >
+          </app-custom-tbl>
+        </div>
+        <div class="mx-auto text-center" *ngIf="loading">
+          <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

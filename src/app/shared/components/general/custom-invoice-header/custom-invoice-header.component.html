@@ -1,0 +1,40 @@
+<div class="d-flex align-items-center flex-wrap text-nowrap">
+
+
+    <div class="input-group wd-200 me-2 mb-2 mb-md-0"></div>
+
+    <ng-container *ngIf="!hideExtraOptions">
+<!--      <button-->
+<!--        (click)="openVerifyModal()"-->
+<!--        style="margin-right: 10px!important"-->
+<!--        class="btn btn-primary btn-icon-text mb-2 mb-md-0 btn-sm mr-4"-->
+<!--        type="button"-->
+<!--        *ngIf="showAddButton"-->
+<!--      >-->
+<!--        <i appFeatherIcon class="btn-icon-prepend" data-feather="plus"></i>-->
+<!--        Verify-->
+<!--      </button>-->
+
+      <button
+        (click)="openApprovalModal()"
+        style="margin-right: 10px!important"
+        class="btn btn-success btn-icon-text mb-2 mb-md-0 btn-sm mr-4"
+        type="button"
+        *ngIf="showAddButton"
+      >
+        <i appFeatherIcon class="btn-icon-prepend" data-feather="plus"></i>
+        Approve
+      </button>
+    </ng-container>
+
+    <button
+      (click)="openRejectionModal()"
+      class="btn btn-danger btn-icon-text mb-2 mb-md-0 btn-sm"
+      type="button"
+      *ngIf="showAddButton"
+    >
+      <i appFeatherIcon class="btn-icon-prepend" data-feather="plus"></i>
+     Reject
+    </button>
+  </div>
+

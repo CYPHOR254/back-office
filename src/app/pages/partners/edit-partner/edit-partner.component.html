@@ -1,0 +1,124 @@
+<div>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">{{ title }}</h5>
+    <button
+      (click)="closeModal()"
+      aria-label="Close"
+      class="btn-close"
+      type="button"
+    ></button>
+  </div>
+  <div [formGroup]="form" class="modal-body">
+    <div class="row">
+      <div class="col-6">
+        <label class="form-label" for="firstName">First Name</label>
+        <input
+          class="form-control"
+          formControlName="firstName"
+          id="firstName"
+          name="firstName"
+          type="text"
+          autocomplete="false"
+        />
+      </div>
+      <div class="col-6">
+        <label class="form-label" for="middleName">Middle Name</label>
+        <input
+          class="form-control"
+          formControlName="middleName"
+          id="middleName"
+          name="middleName"
+          type="text"
+          autocomplete="false"
+        />
+      </div>
+
+      <div class="col-6">
+        <label class="form-label" for="lastName">Last Name</label>
+        <input
+          class="form-control"
+          formControlName="lastName"
+          id="lastName"
+          name="lastName"
+          type="text"
+          autocomplete="false"
+        />
+      </div>
+
+      <div class="col-6">
+        <label class="form-label" for="businessName">Email</label>
+        <input
+          class="form-control"
+          formControlName="email"
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="false"
+        />
+      </div>
+      <div class="col-6">
+        <label class="form-label" for="phoneNumber">Phone Number</label>
+        <input
+          class="form-control"
+          formControlName="phoneNumber"
+          id="phoneNumber"
+          name="phoneNumber"
+          type="number"
+          autocomplete="false"
+        />
+      </div>
+
+      <div class="col-6">
+        <label class="form-label" for="idNumber">ID Number</label>
+        <input
+          class="form-control"
+          formControlName="idNumber"
+          id="idNumber"
+          name="idNumber"
+          type="number"
+          autocomplete="false"
+        />
+        <small
+        *ngIf="
+          form.get('idNumber')?.value < 0 && form.get('idNumber')?.touched
+        "
+        class="text-danger"
+      >
+        Cannot be a negative value
+      </small>
+      </div>
+
+      <p *ngIf="isLoading">
+        <ngb-progressbar
+          [animated]="true"
+          [striped]="true"
+          [value]="95"
+          type="primary"
+        ></ngb-progressbar>
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button (click)="closeModal()" class="btn btn-secondary" type="button">
+      Close
+    </button>
+    <button
+      (click)="submitData()"
+      *ngIf="!this.formData"
+      [disabled]="!form.valid || isLoading"
+      class="btn btn-primary"
+      type="button"
+    >
+      Edit Partner
+    </button>
+    <button
+      (click)="submitData()"
+      *ngIf="this.formData"
+      [disabled]="!form.valid || isLoading"
+      class="btn btn-primary"
+      type="button"
+    >
+      Edit Partner
+    </button>
+  </div>
+</div>

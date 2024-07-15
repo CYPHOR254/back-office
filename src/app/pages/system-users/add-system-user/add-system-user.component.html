@@ -1,0 +1,104 @@
+<div>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">{{title}}</h5>
+      <button (click)="closeModal()" aria-label="Close" class="btn-close" type="button"></button>
+    </div>
+    <div class="modal-body" [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">First Name</label>
+          <input class="form-control" formControlName="firstName" type="text" autocomplete="false">
+          <small *ngIf="form.get('firstName')?.touched && form.get('firstName')?.hasError('required')" class="text-danger">Required
+            Field</small>
+        </div>
+      </div>
+      <div class="col-sm-12">
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Middle Name</label>
+          <input class="form-control" formControlName="middleName" type="text" autocomplete="false">
+          <small *ngIf="form.get('middleName')?.touched && form.get('middleName')?.hasError('required')" class="text-danger">Required
+            Field</small>
+        </div>
+      </div>
+
+      <div class="col-sm-12">
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Last Name</label>
+        <input class="form-control" formControlName="lastName" type="text" autocomplete="false">
+        <small *ngIf="form.get('lastName')?.touched && form.get('lastName')?.hasError('required')" class="text-danger">Required
+          Field</small>
+      </div>
+    </div>
+    <div class="col-sm-12">
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Email</label>
+        <input class="form-control" formControlName="email" type="email" autocomplete="false">
+        <small *ngIf="form.get('email')?.touched && form.get('email')?.hasError('required')" class="text-danger">Required
+          Field</small>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Id Number</label>
+        <input class="form-control" formControlName="idNumber" type="number" autocomplete="false" min="0" step="1">
+        <small *ngIf="form.get('idNumber')?.touched && form.get('idNumber')?.hasError('required')" class="text-danger">Required
+          Field</small>
+          <small
+          *ngIf="
+            form.get('idNumber')?.value < 0 && form.get('idNumber')?.touched
+          "
+          class="text-danger"
+        >
+          Cannot be a negative value
+        </small>
+      </div>
+    </div>   
+
+     <div class="col-sm-12">
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Phone Number</label>
+        <input class="form-control" formControlName="phoneNumber" type="number" autocomplete="false">
+        <small *ngIf="form.get('phoneNumber')?.touched && form.get('phoneNumber')?.hasError('required')" class="text-danger">Required
+          Field</small>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <div class="mb-3">
+        <label for="" class="form-label fw-bold">Profile</label>
+        <select name="profileId" formControlName="profileId"  class="form-control  form-select mb-3">
+          <option *ngFor="let profile of profilesList" [value]="profile.id">{{profile.name}}</option>
+        </select>
+        <small *ngIf="form.get('profileId')?.touched && form.get('profileId')?.hasError('required')" class="text-danger">Required Field</small>
+      </div>
+  </div>
+  
+  <!-- <div class="col-sm-12">
+    <div class="mb-3">
+      <label for="" class="form-label fw-bold" >Channel</label>
+      <select name="channel" formControlName="channel" id="channel" class="form-control">
+        <option *ngFor="let option of channelOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+      <small *ngIf="form.get('channel')?.touched && form.get('channel')?.hasError('required')" class="text-danger">Required Field</small>
+    </div>
+</div> -->
+
+
+        <p *ngIf="isLoading"><ngb-progressbar type="primary" [value]="95" [striped]="true" [animated]="true"></ngb-progressbar></p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="closeModal()" class="btn btn-secondary" type="button">Close</button>
+      <button (click)="submitData()" *ngIf="!this.formData" class="btn btn-primary" type="button"  [disabled]="!form.valid || isLoading">Create SystemUser</button>
+      <button (click)="submitData()" *ngIf="this.formData" class="btn btn-primary" type="button"  [disabled]="!form.valid || isLoading">Save changes</button>
+    </div>
+  </div>
+  
+  

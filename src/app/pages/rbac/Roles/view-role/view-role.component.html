@@ -1,0 +1,98 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a routerLink="/rbac/list-users">List Role</a>
+    </li>
+    <li aria-current="page" class="breadcrumb-item active">View Role</li>
+  </ol>
+</nav>
+
+<div class="row inbox-wrapper">
+  <div class="col-lg-12">
+    <div class="card rounded">
+      <div class="card-body surrounding-element">
+        <div class="row profile-body">
+          <div class="d-none d-md-block col-md-4 col-xl-4 left-wrapper">
+            <div class="card rounded">
+              <div class="text-center m-0 p-0">
+                <i class="bi bi-person-circle" style="font-size: 120px"></i>
+              </div>
+
+              <hr />
+              <div class="email-aside-nav" id="asideNav">
+                <h5 class="text-center fw-bolder"><u>Role Details</u></h5>
+
+                <ul class="list-group list-group-flush">
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    Name
+                    <span class="text-right">{{ roleDetails?.name }}</span>
+                  </li>
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    Remarks
+                    <span class="text-right">{{
+                      roleDetails?.remarks | uppercase
+                    }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<ng-template #verticalCenteredModal let-modal>
+  <!-- <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Change Profile</h5>
+      <button (click)="modal.close('by: close icon')" aria-label="Close" class="btn-close" type="button"></button>
+    </div> -->
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="mb-3">
+          <label class="form-label">Role Name</label>
+          <select
+            class="form-select"
+            formControlName="name"
+            maxlength="24"
+            type="text"
+          >
+            <option></option>
+            <p
+              *ngIf="
+                form.get('name')?.touched &&
+                form.get('name')?.hasError('required')
+              "
+              class="text-danger mt-1 mb-1 pt-0 small text-center"
+            >
+              Required Field
+            </p>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      (click)="modal.close('by: close button')"
+      class="btn btn-secondary"
+      type="button"
+    >
+      Close
+    </button>
+    <button
+      (click)="modal.close('by: save button')"
+      class="btn btn-primary"
+      type="button"
+    >
+      Save changes
+    </button>
+  </div>
+</ng-template>

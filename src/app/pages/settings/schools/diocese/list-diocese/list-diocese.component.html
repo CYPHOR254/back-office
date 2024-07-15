@@ -1,0 +1,36 @@
+<section class="section">
+  <div class="d-flex justify-content-end mb-2">
+    <app-custom-tbl-header
+      [allColumns]="allColumns"
+      [rows]="filteredRows.length > 0 ? filteredRows : rows"
+      [title]="title"
+    ></app-custom-tbl-header>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card p-1">
+        <ng-container *ngIf="dioceseList$ | async"></ng-container>
+        <ng-container *ngIf="rows"></ng-container>
+        <div class="table-responsive" *ngIf="!loading">
+          <app-custom-tbl
+            [columns]="columns"
+            [rows]="rows"
+            [actions]="actions"
+            [loadingIndicator]="false"
+            [totalItems]="totalRecords"
+          >
+          </app-custom-tbl>
+        </div>
+        <div class="mx-auto text-center" *ngIf="loading">
+          <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

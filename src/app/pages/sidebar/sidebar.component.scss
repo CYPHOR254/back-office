@@ -1,0 +1,21 @@
+.sidebar {
+    display: block;
+    /* Add other sidebar styles */
+  }
+  
+  .hamburger-menu {
+    display: none;
+    /* Add your hamburger menu styles */
+  }
+  
+  /* Media query for screens smaller than 992px */
+  @media (max-width: 991px) {
+    .sidebar {
+      display: none;
+    }
+  
+    .hamburger-menu {
+      display: block;
+    }
+  }
+  

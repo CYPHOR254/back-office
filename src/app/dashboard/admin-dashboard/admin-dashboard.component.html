@@ -1,0 +1,273 @@
+<section class="section dashboard">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-xxl-3 col-md-3">
+          <div class="card card-custom-height">
+            <div
+              class="card-body"
+              style="
+                background-color: #2a6592 !important;
+                color: white !important;
+              "
+              [routerLink]="['/reports/schools/submitted-schools']"
+            >
+              <div class="d-flex align-items-center">
+                <i class="bi bi-journal fs-4 me-2"></i>
+                <h5 class="card-title mb-0 p-1 d-title school-d-title">
+                  All Submitted Schools
+                </h5>
+              </div>
+              <span>{{ schoolAnalyticsData.SUBMITTED }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-3">
+          <div class="card card-custom-height">
+            <div
+              class="card-body"
+              style="
+                background-color: #ae7c25 !important;
+                color: white !important;
+              "
+              [routerLink]="['/reports/schools/pending-schools']"
+            >
+              <div class="d-flex align-items-center">
+                <i class="bi bi-clock fs-4 me-2"></i>
+                <h5 class="card-title mb-0 p-1 d-title school-d-title">
+                  All Pending Schools
+                </h5>
+              </div>
+              <span>{{ schoolAnalyticsData.PENDING }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-3">
+          <div class="card card-custom-height">
+            <div
+              class="card-body"
+              style="
+                background-color: #679800 !important;
+                color: white !important;
+              "
+              [routerLink]="['/reports/schools/approved-schools']"
+            >
+              <div class="d-flex align-items-center">
+                <i class="bi bi-check-circle fs-4 me-2"></i>
+                <h5 class="card-title mb-0 pt-1 pb-1 school-d-title">
+                  All Approved Schools
+                </h5>
+              </div>
+              <span>{{ schoolAnalyticsData.APPROVED }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-3">
+          <div class="card card-custom-height">
+            <div
+              class="card-body"
+              style="
+                background-color: #d6202c !important;
+                color: white !important;
+              "
+              [routerLink]="['/reports/schools/rejected-schools']"
+            >
+              <div class="d-flex align-items-center">
+                <i class="bi bi-x-circle fs-4 me-2"></i>
+                <h5 class="card-title mb-0 p-1 d-title school-d-title">
+                  Rejected Schools
+                </h5>
+              </div>
+              <span>{{ schoolAnalyticsData.REJECTED }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-xxl-3 col-md-3">
+          <div class="card card-custom-height">
+            <div
+              class="card-body"
+              style="
+                background-color: #2a6592 !important;
+                color: white !important;
+              "
+              [routerLink]="['/reports/schools/clarification-schools']"
+            >
+              <div class="d-flex align-items-center">
+                <i class="bi bi-file-earmark-text fs-4 me-2"></i>
+                <!-- Bootstrap icon -->
+                <h5 class="card-title mb-0 p-1 d-title school-d-title">
+                  Further Clarification
+                </h5>
+              </div>
+              <span>{{ schoolAnalyticsData.CLARIFICATION }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-3">
+          <div class="card card-custom-height">
+            <div
+              class="card-body"
+              style="
+                background-color: #ae7c25 !important;
+                color: white !important;
+              "
+              [routerLink]="['/']"
+            >
+              <div class="d-flex align-items-center">
+                <i class="bi bi-person-lock fs-4 me-2"></i>
+                <h5 class="card-title mb-0 p-1 d-title school-d-title">
+                  All System Users
+                </h5>
+              </div>
+              <span>{{ userAnalyticsData.ALLSYSTEMUSERS }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-3">
+          <div class="card card-custom-height">
+            <div
+              class="card-body"
+              style="
+                background-color: #679800 !important;
+                color: white !important;
+              "
+            [routerLink]="['/']"
+            >
+              <div class="d-flex align-items-start">
+                <i class="bi bi-people fs-4 me-2"></i>
+                <div class="text-start">
+                  <h5 class="card-title mb-0 pt-1 pb-1 school-d-title">
+                    All Agents
+                  </h5>
+                  <span>{{ userAnalyticsData.AGENTS }}</span>
+                </div>
+                <div class="text-end ms-auto">
+                  <h5 class="card-title mb-0 p-1 d-title school-d-title">
+                    Activated
+                  </h5>
+                  <span>{{ userAnalyticsData.SYSTEMUSERSAGENTS }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-md-3">
+          <div class="card card-custom-height">
+            <div
+              class="card-body"
+              style="
+                background-color: #2a6592 !important;
+                color: white !important;
+              "
+              [routerLink]="['/']"
+            >
+              <div class="d-flex align-items-start">
+                <i class="bi bi-people fs-4 me-2"></i>
+                <div class="text-start">
+                  <h5 class="card-title mb-0 pt-1 pb-1 school-d-title">
+                    All Partners
+                  </h5>
+                  <span>{{ userAnalyticsData.PARTNERS }}</span>
+                </div>
+                <div class="text-end ms-auto">
+                  <h5 class="card-title mb-0 p-1 d-title school-d-title">
+                    Activated
+                  </h5>
+                  <span>{{ userAnalyticsData.SYSTEMUSERSPARTNERS }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="row justify-content-center mb-4">
+    <div class="col-md-12 text-center" id="bar-chart">
+      <apx-chart
+        [series]="barChartOptionsMonthly.series"
+        [chart]="barChartOptionsMonthly.chart"
+        [dataLabels]="barChartOptionsMonthly.dataLabels"
+        [plotOptions]="barChartOptionsMonthly.plotOptions"
+        [yaxis]="barChartOptionsMonthly.yaxis"
+        [xaxis]="barChartOptionsMonthly.xaxis"
+        [fill]="barChartOptionsMonthly.fill"
+        [title]="barChartOptionsMonthly.title"
+        [colors]="barChartOptionsMonthly.colors"
+      ></apx-chart>
+    </div>
+  </div>
+  <div class="row justify-content-center  mb-4">
+
+    <div class="col-md-6 text-center" id="bar-chart">
+      <apx-chart
+        [series]="barChartOptionsCurrentMonth.series"
+        [chart]="barChartOptionsCurrentMonth.chart"
+        [dataLabels]="barChartOptionsCurrentMonth.dataLabels"
+        [plotOptions]="barChartOptionsCurrentMonth.plotOptions"
+        [yaxis]="barChartOptionsCurrentMonth.yaxis"
+        [xaxis]="barChartOptionsCurrentMonth.xaxis"
+        [fill]="barChartOptionsCurrentMonth.fill"
+        [title]="barChartOptionsCurrentMonth.title"
+        [colors]="barChartOptionsCurrentMonth.colors"
+      ></apx-chart>
+    </div>
+    <div class="col-md-6 text-center" id="donut-chart">
+      <apx-chart
+        [series]="donutChartOptionsStatus.series"
+        [chart]="donutChartOptionsStatus.chart"
+        [labels]="donutChartOptionsStatus.labels"
+        [fill]="donutChartOptionsStatus.fill"
+        [colors]="donutChartOptionsStatus.colors"
+        [plotOptions]="donutChartOptionsStatus.plotOptions"
+        [title]="donutChartOptionsStatus.title"
+      ></apx-chart>
+    </div>
+
+  </div>
+  <div class="row justify-content-center  mb-4">
+
+
+    <div class="col-md-6 text-center" id="donut-chart">
+      <apx-chart
+        [series]="donutChartOptionsUsers.series"
+        [chart]="donutChartOptionsUsers.chart"
+        [labels]="donutChartOptionsUsers.labels"
+        [fill]="donutChartOptionsUsers.fill"
+        [colors]="donutChartOptionsUsers.colors"
+        [plotOptions]="donutChartOptionsUsers.plotOptions"
+        [legend]="donutChartOptionsUsers.legend"
+        [title]="donutChartOptionsUsers.title"
+      ></apx-chart>
+    </div>
+    <div class="col-md-6 text-center" id="bar-chart">
+      <apx-chart
+        [series]="barChartOptionsDaily.series"
+        [chart]="barChartOptionsDaily.chart"
+        [dataLabels]="barChartOptionsDaily.dataLabels"
+        [plotOptions]="barChartOptionsDaily.plotOptions"
+        [yaxis]="barChartOptionsDaily.yaxis"
+        [xaxis]="barChartOptionsDaily.xaxis"
+        [fill]="barChartOptionsDaily.fill"
+        [title]="barChartOptionsDaily.title"
+        [colors]="barChartOptionsDaily.colors"
+      ></apx-chart>
+    </div>
+  </div> -->
+
+
+</section>

@@ -1,0 +1,37 @@
+<section class="section">
+    <div class="d-flex justify-content-end mb-2">
+      <app-custom-tbl-header
+        [allColumns]="allColumns"
+        [rows]="filteredRows.length > 0 ? filteredRows : rows"
+        [title]="title"
+        (searchResultsEvent)="searchResultUniversal($event)"
+        (filterDateEvent)="searchResultByDate($event)"
+        (changeColumnsEvent)="updateColumns($event)"
+      ></app-custom-tbl-header>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card p-1">
+          <ng-container *ngIf="OwnLoginHistoryList$ | async"></ng-container>
+          <ng-container *ngIf="rows"></ng-container>
+          <div class="table-responsive" *ngIf="!loading">
+            <app-custom-tbl
+              [columns]="columns"
+              [rows]="OwnLoginHistoryList$ | async"
+              [rows]="rows"
+              [actions]="actions"
+              [loadingIndicator]="false"
+              [totalItems]="totalRecords"
+              (outputEvent)="triggerEvent($event)"
+            >
+            </app-custom-tbl>
+          </div>
+          <div class="mx-auto text-center" *ngIf="loading">
+            <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  

@@ -1,0 +1,89 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3 col-xl-3 left-wrapper">
+      <div class="card rounded">
+        <div class="email-aside-nav" id="asideNav">
+          <img
+            class="image-rounded profile-image justify-content-center"
+            src="assets/img/profile-image.png"
+            alt="Profile Image"
+            width="70%"
+          />
+
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Name:</span>
+              <span class="text-right p-1">
+                {{ getFullName(userDetails?.firstName, userDetails?.lastName) | titlecase }}
+              </span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Profile:</span>
+              <span class="text-right p-1">{{ userDetails?.profile | titlecase }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9 col-xl-9">
+      <div class="card-body">
+        <div class="row">
+          <ul
+            ngbNav
+            #fillJustifyNav="ngbNav"
+            class="nav-tabs justify-content-start navbar-shadow"
+            [(activeId)]="activeId"
+          >
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>Basic Info</a>
+              <ng-template ngbNavContent>
+                <app-basic-info [userId]="userId"></app-basic-info>
+              </ng-template>
+            </li>
+
+            <li [ngbNavItem]="2" *ngIf="(profile === 'ROLE_PARTNER' )"  >
+              <a ngbNavLink>Rejected Schools</a>
+              <ng-template ngbNavContent>
+                <app-rejected-schools></app-rejected-schools>
+              </ng-template>
+            </li>
+    
+          <li [ngbNavItem]="3"  *ngIf="(profile === 'ROLE_PARTNER' )">
+              <a ngbNavLink>Clarification Schools</a>
+              <ng-template ngbNavContent>
+                <app-clarification-schools></app-clarification-schools>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="4" *ngIf="(profile === 'ROLE_PARTNER' )">
+              <a ngbNavLink>Approved Schools</a>
+              <ng-template ngbNavContent>
+                <app-approved-schools></app-approved-schools>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="5" *ngIf="profile === 'ROLE_AGENT'">
+              <a ngbNavLink>School Added</a>
+              <ng-template ngbNavContent>
+                <app-added-schools [userId]="userId"></app-added-schools>
+              </ng-template>
+            </li>
+    
+            <li  [ngbNavItem]="6"  *ngIf="(profile !== 'AGENT' )">
+              <a ngbNavLink>Login History</a>
+              <ng-template ngbNavContent>
+                <app-login-history ></app-login-history>
+              </ng-template>
+            </li>
+          </ul>
+
+          <!-- <div
+            [ngbNavOutlet]="fillJustifyNav"
+            class="border border-top-0 p-0"
+          ></div> -->
+        </div>
+      </div>
+
+      <!-- <router-outlet></router-outlet> -->
+    </div>
+  </div>
+</div>

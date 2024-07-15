@@ -1,0 +1,24 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a [routerLink]="['/settings/counties']">County</a>
+    </li>
+    <li
+      aria-current="page"
+      class="breadcrumb-item active"
+      [routerLink]="['/settings/counties/list-subcounties']"
+    >
+      SubCounty
+    </li>
+  </ol>
+</nav>
+
+<ul class="list-group">
+  <li
+    class="list-group-item justify-content-between align-items-center text-sm cursor:pointer"
+    *ngFor="let subCounty of subCounties"
+  >
+    Name : {{ subCounty.name }}
+    <span class="text-right text-sm"></span>
+  </li>
+</ul>

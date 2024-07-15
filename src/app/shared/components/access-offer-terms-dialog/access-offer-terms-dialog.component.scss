@@ -1,0 +1,54 @@
+.container{
+    padding: 20px;
+}
+.first> img{
+    width: 200px !important;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 100%;
+  margin: 5px auto;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+  text-align: center;
+}
+
+.terms {
+  //margin-bottom: 15px;
+}
+
+input[type="checkbox"] {
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+label {
+  font-size: 16px;
+  color: #333;
+}
+
+input[type="submit"] {
+  padding: 10px 20px;
+  background-color: #4285f4;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+input[type="submit"]:hover {
+  background-color: #0d8bf2;
+}

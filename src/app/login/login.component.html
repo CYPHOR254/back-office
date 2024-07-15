@@ -1,0 +1,160 @@
+<!-- <section
+  class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4"
+>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div
+        class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center mx-5"
+      >
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="justify-content-center py-1">
+              <div
+                class="d-flex justify-content-center align-items-center w-auto"
+              >
+                <img
+                  class="image-rounded"
+                  src="assets/img/logo.png"
+                  alt=""
+                  width="70%"
+                />
+              </div>
+              <div class="logo pt-4 text-center mx-auto">
+                <span class="text-center heading">School Data Capture</span>
+              </div>
+            </div>
+
+            <form
+              [formGroup]="loginForm"
+              class="row g-3 needs-validation"
+              novalidate
+            >
+              <div class="col-12">
+                <label class="form-label" for="yourUsername">Email</label>
+                <div class="input-group has-validation">
+                  <span class="input-group-text" id="inputGroupPrepend">@</span>
+                  <input
+                    class="form-control"
+                    formControlName="email"
+                    id="yourUsername"
+                    name="username"
+                    type="text"
+                    autocomplete="false"
+                  />
+                  <div class="invalid-feedback">
+                    Please enter your username.
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label" for="password">Password</label>
+                <div class="input-group has-validation">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    name="password"
+                  />
+                  <button
+                    appTogglePassword
+                    class="input-group-text"
+                    type="button"
+                    aria-label="Toggle password visibility"
+                  >
+                    <i
+                      class="bi"
+                      [ngClass]="
+                        showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'
+                      "
+                    ></i>
+                  </button>
+                  <div class="invalid-feedback">
+                    Please enter your password!
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <button
+                  (click)="submit()"
+                  class="btn btn-primary w-100 login-btn"
+                  [disabled]="!loginForm.valid || isLoading"
+                >
+                  Login
+                </button>
+              </div>
+
+              <div class="col-12 text-center">
+                <a style="cursor: pointer !important" (click)="resetPassword()"
+                  ><u>Reset your password</u></a
+                >
+              </div>
+            </form>
+            <ng-container
+              *ngIf="!(loginResp$ | async) && isLoading"
+              class="m-2 w-100"
+            >
+              <div class="mt-2">
+                <progressbar
+                  [animate]="true"
+                  [max]="100"
+                  [striped]="true"
+                  [value]="50"
+                  type="danger"
+                  ><i>Authentication in progress...</i></progressbar
+                >
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-ds">
+    Copyright &copy; 2024
+    <strong><span> EduVOD Africa Ltd | Kenya.</span></strong>
+    <span class="p-1">Version: {{ version }}</span>
+    <strong> All Rights Reserved</strong>
+  </div>
+</section> -->
+<div class="row w-100 mx-0 auth-page d-flex justify-content-center align-items-center" style="background-color: #004889; height: 100vh;">
+  <div class="col-md-6 col-xl-4 mx-auto">
+    <div class="card">
+      <div class="auth-form-wrapper px-4 py-5">
+        <img src="../../../../assets/images/logo.png" alt="logo" style="width: 221px; height: 88px; display: flex; margin: 0 auto;">
+        <h5 class="text-muted fw-normal mb-4 text-center" style="color: #004889;">Welcome back! Log in to your account.</h5>
+        <form [formGroup]="loginForm" class="forms-sample" (ngSubmit)="submit()">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" formControlName="email" placeholder="Email">
+            <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="text-danger">
+              <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</div>
+              <div *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email address.</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" formControlName="password" autocomplete="current-password" placeholder="Password">
+            <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="text-danger">
+              <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</div>
+            </div>
+          </div>
+          <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="authCheck" formControlName="rememberMe">
+            <label class="form-check-label" for="authCheck">Remember me</label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary me-2 mb-2 mb-md-0" [disabled]="isLoading">Login</button>
+          </div>
+        </form>
+        <div *ngIf="isLoading" class="text-center mt-3">
+          <span class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </span>
+          <p class="text-muted mt-2">Logging in...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

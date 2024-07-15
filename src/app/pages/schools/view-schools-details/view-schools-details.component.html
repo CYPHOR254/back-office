@@ -1,0 +1,69 @@
+<div class="">
+  <div class="row mb-1">
+    <!-- Left column for school logo -->
+    <div class="col-12 col-md-2  mb-2 mb-md-0">
+      <img class="school-logo" [src]="schoolDetails?.logoUrl || defaultLogoUrl" alt="School Logo">
+    </div>
+    
+    <div class="col-12 col-md-8">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <h5>School Name: <strong>{{ schoolDetails?.name }}</strong></h5>
+        </div>
+        <div class="col-12">
+          <p>
+            Status: <span [style.background-color]="getStatusBackgroundColor(schoolDetails?.status)" class="bg-status">{{ schoolDetails?.status }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-2 mt-2 mt-md-0">
+      <div class="dropdown d-flex justify-content-md-end">
+        <button id="approveButton" class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" *ngIf="profile == 'ROLE_PARTNER' || profile == 'ROLE_SUPER-ADMIN'">
+          Approve/Decline
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a class="dropdown-item" (click)="approveSchool(row)">Approve</a>
+          </li>
+          <li>
+            <a class="dropdown-item" (click)="rejectSchool(row)">Decline</a>
+          </li>
+        </ul>
+        <div class="mx-auto text-center" *ngIf="loading">
+          <div class="spinner-border text-primary mt-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+  </div>
+  <ng-template #loadingTemplate>
+    <div class="spinner-border bg-spinner" role="status" >
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </ng-template>
+  <div>
+    <div class="card-body">
+      <div class="row">
+        <ul ngbNav #fillJustifyNav="ngbNav" class="nav-tabs justify-content-start navbar-shadow" style="padding-right: 0 !important" [(activeId)]="activeId">
+          <li [ngbNavItem]="i" *ngFor="let item of menuOutline; let i = index">
+            <a ngbNavLink class="menu-title" style="font-weight: 600">{{ item?.name | titlecase }}</a>
+            <ng-template ngbNavContent>
+              <app-view-basic-school-info [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'Basic School Information'"></app-view-basic-school-info>
+              <app-list-contact-info [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'Contact Information'"></app-list-contact-info>
+              <app-list-detailed-school-profile [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'Detailed School Profile'"></app-list-detailed-school-profile>
+              <app-list-directors [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'Directors Documents'"></app-list-directors>
+              <app-list-supporting-documents [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'Supporting Documents'"></app-list-supporting-documents>
+              <app-list-school-documents [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'School Documents'"></app-list-school-documents>
+              <app-list-financial-documents [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'Financial Information'"></app-list-financial-documents>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-0"></div>
+      </div>
+    </div>
+  </div>
+</div>

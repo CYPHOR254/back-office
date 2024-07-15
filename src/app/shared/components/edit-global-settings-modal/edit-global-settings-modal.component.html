@@ -1,0 +1,120 @@
+<div>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">{{title}}</h5>
+      <button (click)="closeModal()" aria-label="Close" class="btn-close" type="button"></button>
+    </div>
+    <div class="modal-body" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Interest Rate Percentage *</label>
+          <div class="input-group has-validation">
+            <input class="form-control" formControlName="interestRatePercentage" type="text" autocomplete="false"/>
+            <div class="invalid-feedback">Please enter Interest Rate Percentage.</div>
+          </div>
+          <small
+            *ngIf="
+              form.get('interestRatePercentage')?.touched &&
+              form.get('interestRatePercentage')?.hasError('required')
+            "
+            class="text-danger"
+          >Required Field</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Tenure Duration *</label>
+          <div class="input-group has-validation">
+            <input class="form-control" formControlName="tenureDuration" type="text" autocomplete="false"/>
+            <div class="invalid-feedback">Please enter Tenure Duration.</div>
+          </div>
+          <small
+            *ngIf="
+              form.get('tenureDuration')?.touched &&
+              form.get('tenureDuration')?.hasError('required')
+            "
+            class="text-danger"
+          >Required Field</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Discounting Percentage: *</label>
+          <div class="input-group has-validation">
+            <input class="form-control" formControlName="discountingPercentage" type="text" autocomplete="false"/>
+            <div class="invalid-feedback">Please enter Discounting Percentage.</div>
+          </div>
+          <small
+            *ngIf="
+              form.get('discountingPercentage')?.touched &&
+              form.get('discountingPercentage')?.hasError('required')
+            "
+            class="text-danger"
+          >Required Field</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Management Fee Percentage: *</label>
+          <div class="input-group has-validation">
+            <input class="form-control" formControlName="managementFeePercentage" type="text" autocomplete="false"/>
+            <div class="invalid-feedback">Please enter Management Fee Percentage.</div>
+          </div>
+          <small
+            *ngIf="
+              form.get('managementFeePercentage')?.touched &&
+              form.get('managementFeePercentage')?.hasError('required')
+            "
+            class="text-danger"
+          >Required Field</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Invoice Age: *</label>
+          <div class="input-group has-validation">
+            <input class="form-control" formControlName="invoiceAge" type="text" autocomplete="false" />
+            <div class="invalid-feedback">Please enter Invoice Age.</div>
+          </div>
+          <small
+            *ngIf="
+              form.get('invoiceAge')?.touched &&
+              form.get('invoiceAge')?.hasError('required')
+            "
+            class="text-danger"
+          >Required Field</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Rollover Period: *</label>
+          <div class="input-group has-validation">
+            <input class="form-control" formControlName="rollOverPeriod" type="text" autocomplete="false"/>
+            <div class="invalid-feedback">Please enter rollover Age.</div>
+          </div>
+          <small
+            *ngIf="
+              form.get('rollOverPeriod')?.touched &&
+              form.get('rollOverPeriod')?.hasError('required')
+            "
+            class="text-danger"
+          >Required Field</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Default Notification Email: *</label>
+          <div class="input-group has-validation">
+            <input class="form-control" formControlName="defaultNotificationEmail" type="text" autocomplete="false"/>
+            <div class="invalid-feedback">Please enter default Notification Email.</div>
+          </div>
+          <small
+            *ngIf="
+              form.get('defaultNotificationEmail')?.touched &&
+              form.get('defaultNotificationEmail')?.hasError('required')
+            "
+            class="text-danger"
+          >Required Field</small>
+        </div>
+
+      </div>
+
+      <p *ngIf="isLoading"><ngb-progressbar type="primary" [value]="95" [striped]="true" [animated]="true"></ngb-progressbar></p>
+
+    </div>
+  </div>
+    <div class="modal-footer">
+      <button (click)="editGlobalSettings()" class="btn btn-primary" type="button">Edit</button>
+    </div>
+  </div>

@@ -1,0 +1,64 @@
+
+<div class="container mb-2  mt-3">
+    <!-- <nav class="page-breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a routerLink="/system-users/all-system-users">System User</a>
+        </li>
+        <li aria-current="page" class="breadcrumb-item active">
+          View System User
+        </li>
+      </ol>
+    </nav> -->
+    <h6 class="mb-3">{{ getFullName(systemUserDetails?.firstName, systemUserDetails?.lastName) | titlecase }} Details </h6>
+    <h6>     
+         </h6>
+    <div class="row mb-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-5 col-md-6">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex align-items-center">
+                  <span class="list-title">Name:</span>
+                  <span class="text-right p-1">{{ getFullName(systemUserDetails?.firstName, systemUserDetails?.lastName) |titlecase }}</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <span class="list-title">Email:</span>
+                  <span class="text-right p-1">{{ systemUserDetails?.email }}</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <span class="list-title">Phone Number:</span>
+                  <span class="text-right p-1">{{ systemUserDetails?.phoneNumber }}</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center"> 
+                  <button *ngIf="systemUserDetails?.blocked !== '0' " class="btn btn-success" (click)="blockOrUnblockUser(false)">UnBlock User</button>
+                  <button *ngIf="systemUserDetails?.blocked == '0' " class="btn btn-danger" (click)="blockOrUnblockUser(true)">Block User</button>
+             </li>
+              </ul>
+            </div>
+            <!-- {{systemUserDetails|json}} -->
+            <div class="col-sm-5 .offset-sm-2 .col-md-6 .offset-md-0">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex align-items-center">
+                  <span class="list-title">ID Number:</span>
+                  <span class="text-right p-1">{{ systemUserDetails?.idNumber}}</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <span class="list-title">Created On:</span>
+                  <span class="text-right p-1">{{ systemUserDetails?.createdOn | date: 'medium' }}</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <span class="list-title">Created By: </span>
+                  <span class="text-right p-1">{{ systemUserDetails?.createdBy |titlecase }}</span>
+                </li>
+                
+              </ul>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+  

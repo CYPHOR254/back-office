@@ -1,0 +1,46 @@
+
+
+<section class="section">
+  <div class="d-flex justify-content-between b-2">
+    <div class="pagetitle">
+      <h1>Partners List</h1>
+    </div>
+    <app-custom-tbl-header
+      [allColumns]="allColumns"
+      [rows]="filteredRows.length > 0 ? filteredRows : rows"
+      [title]="title"
+      (searchResultsEvent)="searchResultUniversal($event)"
+      (filterDateEvent)="searchResultByDate($event)"
+      (changeColumnsEvent)="updateColumns($event)"
+    ></app-custom-tbl-header>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card p-1">
+        <ng-container *ngIf="partnersList$ | async"></ng-container>
+        <ng-container *ngIf="rows"></ng-container>
+        <div class="table-responsive" *ngIf="!loading">
+          <app-custom-tbl
+            [columns]="columns"
+            [actions]="actions"
+            [rows]="partnersList$ | async"
+            [rows]="rows"
+            [loadingIndicator]="false"
+            [totalItems]="totalRecords"
+            (updateFilteredRows)="updateFilteredRowsEvent($event)"
+          >
+          </app-custom-tbl>
+        </div>
+        <div class="mx-auto text-center" *ngIf="loading">
+          <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

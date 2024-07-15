@@ -1,0 +1,41 @@
+<section class="section">
+  <div class="d-flex justify-content-end mb-2">
+    <app-custom-tbl-header
+    [allColumns]="allColumns"
+
+      [rows]="schoolList$ | async"
+      [title]="'Schools'"
+      (searchResultsEvent)="searchResultUniversal($event)"
+      (filterDateEvent)="searchResultByDate($event)"
+    ></app-custom-tbl-header>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card p-1">
+        <div class="table-responsive" *ngIf="!loading">
+          <select [formControl]="pageSizeControl" class="form-select ms-2 w-auto" aria-label="Default select example">
+            <option *ngFor="let option of pageSizeOptions" [value]="option.value">{{ option.name }}</option>
+          </select>
+          <app-custom-tbl
+            [columns]="columns"
+            [rows]="schoolList$ | async"
+            [rows]="rows"
+            [loadingIndicator]="false"
+            [totalItems]="totalRecords"
+            [actions]="actions"
+            (updateFilteredRows)="updateFilteredRowsEvent($event)"
+          ></app-custom-tbl>
+        </div>
+        <div class="mx-auto text-center" *ngIf="loading">
+          <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

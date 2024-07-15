@@ -1,0 +1,63 @@
+<header id="header" class="header fixed-top d-flex align-items-center">
+  <div class="container-fluid">
+    <div class="row justify-content-between align-items-center">
+      <div class="col">
+        <div class="d-flex align-items-center">
+          <i class="toggle-sidebar-btn" 
+             [ngClass]="{'bi bi-list': !sidebarOpen, 'bi bi-x': sidebarOpen}" 
+             style="color: #004889; font-size: 32px; cursor: pointer;" 
+             (click)="toggleSidebar()"></i>
+          <p class="logo d-flex align-items-center mb-0" style="margin-left: 20px;"></p>
+        </div>
+      </div>
+      <div class="col text-center">
+        <p class="logo d-flex align-items-center mb-0">
+          <span class="d-none d-lg-block" style="text-decoration: none !important; color: #004889 !important;">School Data Capture</span>
+        </p>
+      </div>
+      <div class="col text-end">
+        <nav class="header-nav">
+          <ul class="d-flex align-items-center justify-content-end">
+            <!-- Conditionally show last login based on screen size -->
+            <li class="nav-item last-login p-2 d-none d-sm-block"> 
+              <!-- Last Login: {{lastLogin}} -->
+            </li>
+       
+            <li class="nav-item dropdown pe-3" dropdown>
+              <a class="nav-link nav-icon nav-profile d-flex align-items-center pe-0" href="javascript:void(0)" dropdownToggle>
+                <i class="bi bi-person-circle"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile" *dropdownMenu>
+                <li class="dropdown-header text-start">
+                  <h6>{{ userName }}</h6>
+                  <span>{{ profile }}</span>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" routerLink="/user-profile">
+                    <i class="bi bi-person"></i>
+                    <span>My Profile</span>
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" style="cursor: pointer" (click)="changePassword()">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Change Password</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" routerLink="/login" (click)="logOutUser()">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Sign Out</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+

@@ -1,0 +1,21 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+// Custom alert styles using Bootstrap mixins
+$custom-alert-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+  "light": $light,
+  "dark": $dark
+);
+
+@each $key, $value in $custom-alert-colors {
+  .alert-#{$key} {
+    @include alert-variant($value, $value, $white);
+  }
+}

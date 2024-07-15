@@ -1,0 +1,85 @@
+<!-- Add School Modal -->
+<div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSchoolModalLabel">Add School</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="editSchoolForm" (ngSubmit)="onSubmitAdd()">
+                    <div class="mb-3">
+                        <label for="schoolName" class="form-label">School Name</label>
+                        <input type="text" class="form-control" id="schoolName" formControlName="schoolName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="emailAddress" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="emailAddress" formControlName="emailAddress">
+                    </div>
+                    <div class="mb-3">
+                        <label for="mobileNo" class="form-label">Mobile No</label>
+                        <input type="text" class="form-control" id="mobileNo" formControlName="mobileNo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="postalAddress" class="form-label">Postal Address</label>
+                        <input type="text" class="form-control" id="postalAddress" formControlName="postalAddress">
+                    </div>
+                    <div class="mb-3">
+                        <label for="postalCode" class="form-label">Postal Code</label>
+                        <input type="text" class="form-control" id="postalCode" formControlName="postalCode">
+                    </div>
+                    <!-- County Dropdown -->
+                    <div class="mb-3">
+                        <label for="county">County</label>
+                        <select class="form-control" formControlName="county" (change)="onEditCountyChange()">
+                            <option *ngFor="let county of countiesData" [value]="county.name">
+                                {{ county.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <!-- Subcounty Dropdown -->
+                    <div class="mb-3">
+                        <label for="subcounty">Subcounty</label>
+                        <select class="form-control" formControlName="subcounty" [disabled]="!selectedEditCounty">
+                            <option *ngFor="let subcounty of selectedEditCounty?.sub_counties" [value]="subcounty">
+                                {{ subcounty }}
+                            </option>
+                        </select>
+                    </div>
+                    <!-- Curriculum Dropdown -->
+                    <div class="mb-3">
+                        <label for="curriculumId">Curriculum</label>
+                        <select class="form-control" formControlName="curriculumId">
+                            <option *ngFor="let curriculum of curriculums" [value]="curriculum.curriculumId">
+                                {{ curriculum.curriculum }}
+                            </option>
+                        </select>
+                    </div>
+                    <!-- School Type Dropdown -->
+                    <div class="mb-3">
+                        <label for="schoolCategory">School Category</label>
+                        <select formControlName="schoolCategoryId" class="form-control" id="schoolCategory">
+                            <option *ngFor="let category of schoolTypes" [value]="category.schoolTypeId">{{
+                                category.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="moeRegistrationNo" class="form-label">MOE Registration No</label>
+                        <input type="text" class="form-control" id="moeRegistrationNo" formControlName="moeRegistrationNo">
+                    </div>
+                    <!-- Add School Logo -->
+                    <div class="mb-3">
+                        <label for="logoUpload">Logo</label>
+                        <input type="file" id="logoUpload" formControlName="logoUpload" (change)="handleLogoUpload($event)">
+                        <small class="form-text text-muted">Upload school logo</small>
+                        <img *ngIf="logoPreviewUrl" [src]="logoPreviewUrl" class="img-fluid mt-2" alt="Logo Preview">
+                    </div>
+                    <button type="submit" class="btn btn-primary" [disabled]="editSchoolForm.invalid">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-left: 15px;">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    

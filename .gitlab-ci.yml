@@ -1,0 +1,69 @@
+stages:
+  - test
+  - build
+  - deploy
+repository-scan:
+  stage: test
+  image:
+    name: aquasec/trivy:0.49.1
+    entrypoint: [""]
+  tags:
+    - scan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+#    - if: $CI_PIPELINE_SOURCE == 'push'
+  script:
+    - trivy repository ./ --cache-dir ./trivycache/ 
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-${CI_JOB_NAME}
+    paths:
+      - ./trivycache/
+
+build-angular-application:
+  stage: build
+  tags:
+    - angular
+  image:
+    name: node:18.19.1-bookworm-slim
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-${CI_JOB_NAME}
+    paths:
+      - node_modules/
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'development'
+  script:
+    - npm install -g @angular/cli
+    - npm install --legacy-peer-deps
+    - ng build
+  artifacts:
+    paths:
+      - dist/
+
+
+build-container-image:
+  stage: build
+  needs: ["build-angular-application"]
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'development'
+      variables:   
+        IMAGE_TAG: "latest"
+  script:
+    - /kaniko/executor
+      --context "$CI_PROJECT_DIR"
+      --dockerfile "Dockerfile"
+      --destination devops-registry.ekenya.co.ke/emis/back-office-portal:"$IMAGE_TAG"
+
+deploy-container-image-to client:
+  stage: deploy
+  needs: ["build-container-image"]
+  image: alpine
+  script:
+    - apk add --no-cache openssh-client sshpass
+    - sshpass -p "3duV0d@51772024" ssh -o StrictHostKeyChecking=no emis-test-server@102.133.148.212 "echo 'Connection successful'"
+
+
+
+

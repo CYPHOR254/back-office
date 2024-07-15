@@ -1,0 +1,89 @@
+<!-- <div *ngIf="!showFilterOnly" class="row mb-1">
+    <div class="col-3">
+      <app-reactive-input [placeHolder]="'Search ...'" [control]="customFormControl('search', filterForm)" [mb0]="'mb-0'">
+      </app-reactive-input>
+    </div>
+  
+    <div class="col-3 ms-auto d-flex align-items-center">
+      <div class="form-group mb-0 ms-auto">
+        <select class="form-select form-select-sm" [formControl]="customFormControl('elementsPerPage', filterForm)">
+          <option [ngValue]="5">5</option>
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="20">20</option>
+          <option [ngValue]="50">50</option>
+          <option [ngValue]="100">100</option>
+          <option [ngValue]="200">200</option>
+          <option [ngValue]="0">All</option>
+        </select>
+      </div>
+      <button *ngIf="exportConfig?.exportXlsx" [disabled]="filterForm.invalid" (click)="onExportingXlsx()"
+        class="btn btn-outline-primary btn-sm ms-2">
+        <em class="bi bi-file-earmark-excel text-success"></em>
+      </button>
+      <button *ngIf="exportConfig?.exportPdf" (click)="onExportingPdf()" class="btn btn-light btn-sm ms-2">
+        <em class="bi bi-file-earmark-pdf text-danger"></em>
+      </button>
+      <div class="ms-2 d-flex align-items-center" *ngIf="showExporting">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <small>Exporting ...</small>
+      </div>
+      <button [ngClass]="{ 'd-none': filterShow }" [disabled]="filterDisableBtn || filterForm.invalid"
+        (click)="loadData()" class="btn btn-primary btn-sm ms-2">
+        <em class="bi bi-arrow-clockwise"></em>
+      </button>
+      <button *ngIf="!hideFilterBtn" (click)="toggleFilterShow()" class="btn btn-primary btn-sm ms-2">
+        <em class="bi" [ngClass]="{ 'bi-filter': !filterShow, 'bi-x-lg': filterShow }"></em>
+      </button>
+    </div>
+  </div>
+  
+  <div class="row mb-3" [ngClass]="{ 'd-none': !filterShow }">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body" style="padding-bottom: 0.25rem">
+          <div class="row">
+            <div *ngFor="let filter of filterList" class="col-3">
+              <app-input-text *ngIf="filter.filterType.type === 'text'" [fieldId]="filter.filterLabel"
+                [isFilterVar]="true" [control]="customFormControl(filter.filterControl, filterForm)" [mb]="'mb-3'">
+              </app-input-text>
+  
+              <div>
+                <app-input-select *ngIf="filter.filterType.type === 'select'"
+                  [selectSearch]="filter.filterType.selectSearched?true:false" [fieldId]="filter.filterLabel"
+                  [predicate]="filter.filterType.optionsPredicate" [optionsList]="filter.filterType.optionList"
+                  [multipleSelect]="filter.filterType.multiSelect?true:false" [isFilterVar]="true"
+                  [control]="customFormControl(filter.filterControl, filterForm)" [mb]="'mb-3'">
+                </app-input-select>
+              </div>
+  
+              <app-input-date [mb]="'mb-3'" *ngIf="filter.filterType.type === 'date'" [allowFuture]="false"
+                [singleDate]="filter.filterType.singleDate"
+                [control]="customFormControl(filter.filterControl, filterForm)" [fieldId]="filter.filterLabel"
+                [isFilterVar]="true">
+              </app-input-date>
+            </div>
+  
+            <div class="col-3 d-flex justify-content-between ms-auto mb-3">
+              <button [disabled]="filterDisableBtn || filterForm.invalid" (click)="loadData()"
+                class="btn btn-primary btn-sm w-100">
+                <em class="bi bi-funnel me-2"></em>
+                Load
+              </button>
+    
+              <button *ngIf="exportConfig?.exportXlsx && showFilterOnly" [disabled]="filterForm.invalid" (click)="onExportingXlsx()"
+                class="btn btn-secondary btn-sm ms-2">
+                <em class="bi bi-file-earmark-excel text-success"></em>
+              </button>
+              <button *ngIf="exportConfig?.exportPdf && showFilterOnly" (click)="onExportingPdf()" class="btn btn-light btn-sm ms-2">
+                <em class="bi bi-file-earmark-pdf text-danger"></em>
+              </button>
+              <div class="ms-2 d-flex align-items-center" *ngIf="showExporting">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <small>Exporting ...</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->

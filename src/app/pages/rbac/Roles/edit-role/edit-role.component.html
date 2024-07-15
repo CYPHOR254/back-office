@@ -1,0 +1,70 @@
+<div>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">{{ title }}</h5>
+    <button
+      (click)="closeModal()"
+      aria-label="Close"
+      class="btn-close"
+      type="button"
+    ></button>
+  </div>
+  <div [formGroup]="form" class="modal-body">
+    <div class="row">
+      <div class="col-6">
+        <label class="form-label fw-bold">Role Name</label>
+        <input
+          class="form-control"
+          formControlName="name"
+          id="name"
+          name="name"
+          type="text"
+          autocomplete="false"
+        />
+      </div>
+
+      <div class="col-6">
+        <label class="form-label" for="remarks">Remarks</label>
+        <input
+          class="form-control"
+          formControlName="remarks"
+          id="remarks"
+          name="remarks"
+          type="text"
+          autocomplete="false"
+        />
+      </div>
+
+      <p *ngIf="isLoading">
+        <ngb-progressbar
+          [animated]="true"
+          [striped]="true"
+          [value]="95"
+          type="primary"
+        ></ngb-progressbar>
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button (click)="closeModal()" class="btn btn-secondary" type="button">
+      Close
+    </button>
+    <button
+      (click)="submitData()"
+      *ngIf="!this.formData"
+      [disabled]="!form.valid || isLoading"
+      class="btn btn-primary"
+      type="button"
+    >
+      Edit Role
+    </button>
+    <button
+      (click)="submitData()"
+      *ngIf="this.formData"
+      [disabled]="!form.valid || isLoading"
+      class="btn btn-primary"
+      type="button"
+    >
+      Edit Role
+    </button>
+  </div>
+</div>

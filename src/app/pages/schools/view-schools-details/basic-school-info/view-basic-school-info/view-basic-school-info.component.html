@@ -1,0 +1,118 @@
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col d-flex flex-column">
+      <p class="status">
+        <strong>Status:</strong> {{ completion_status }} {{ completion_percentage }}%
+      </p>
+      <p class="clarification-remarks" *ngIf="completion_status === 'CLARIFICATION' || remarkStatus === 'REVIEW'">
+        <strong>Clarification:</strong> {{ clarificationStatus }}
+      </p>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-outline-primary clarification"
+              *ngIf="(profile === 'ROLE_PARTNER' || profile === 'ROLE_SUPER-ADMIN') && remarkStatus === 'CLOSED'"
+              (click)="addClarification()">
+              Add Clarification
+      </button>
+      <button class="btn btn-outline-primary clarification"
+              *ngIf="(profile === 'ROLE_PARTNER' || profile === 'ROLE_SUPER-ADMIN') && remarkStatus === 'REVIEW'"
+              (click)="closeClarification()">
+              Close Clarification
+      </button>
+      <button class="btn btn-outline-primary clarification"
+              *ngIf="(profile === 'ROLE_PARTNER' || profile === 'ROLE_SUPER-ADMIN') && remarkStatus === 'OPEN'">
+              Clarification request sent to Agent
+      </button>
+      <div class="mx-auto text-center" *ngIf="loading">
+        <div class="spinner-border text-primary mt-3" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-5 col-md-6">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Name:</span>
+              <span class="text-right p-1">{{ schoolList?.name | titlecase }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Email:</span>
+              <span class="text-right p-1">{{ schoolList?.emailAddress | titlecase }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Phone Number:</span>
+              <span class="text-right p-1">{{ schoolList?.mobileNumber | titlecase }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">School Gender:</span>
+              <span class="text-right p-1">{{ schoolList?.schoolGender | titlecase }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Curriculum:</span>
+              <span class="text-right p-1">{{ schoolList?.curriculum | titlecase }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Postal Address:</span>
+              <span class="text-right p-1">{{ schoolList?.postalAddress | titlecase }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Postal Code:</span>
+              <span class="text-right p-1">{{ schoolList?.postalCode | titlecase }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Moe:</span>
+              <span class="text-right p-1">{{ schoolList?.moeRegistrationNumber | titlecase }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-5 col-md-6">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Diocese:</span>
+              <span class="text-right p-1">{{ schoolList?.diocese | titlecase }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Sub County:</span>
+              <span class="text-right p-1">{{ schoolList?.subCounty | titlecase }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">County:</span>
+              <span class="text-right p-1">{{ schoolList?.county | titlecase }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">State:</span>
+              <span class="text-right p-1">{{ schoolList?.state | titlecase }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Road:</span>
+              <span class="text-right p-1">{{ schoolList?.road | titlecase }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Created On:</span>
+              <span class="text-right p-1">{{ schoolList?.createdOn | date: 'medium' }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title">Created by:</span>
+              <span class="text-right p-1">{{ schoolList?.createdBy | titlecase }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="mx-auto text-center" *ngIf="loading">
+  <div class="lds-ellipsis">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>

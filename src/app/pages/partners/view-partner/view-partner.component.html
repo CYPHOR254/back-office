@@ -1,0 +1,52 @@
+<div class="card-body">
+  <div class="row">
+    <ul
+      ngbNav
+      #fillJustifyNav="ngbNav"
+      class="nav-tabs navbar-shadow"
+      [(activeId)]="activeId"
+    >
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>Partner Details</a>
+        <ng-template ngbNavContent>
+          <app-partner-details [partnerId]="partnerId"></app-partner-details>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2"  >
+        <a ngbNavLink>Rejected Schools</a>
+        <ng-template ngbNavContent>
+          <app-rejected-schools [partnerId]="partnerId"></app-rejected-schools>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="3" >
+        <a ngbNavLink>Clarification Schools</a>
+        <ng-template ngbNavContent>
+          <app-clarification-schools [partnerId]="partnerId"></app-clarification-schools>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="4" >
+        <a ngbNavLink>Approved Schools</a>
+        <ng-template ngbNavContent>
+          <app-approved-schools [partnerId]="partnerId"></app-approved-schools>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="5">
+        <a ngbNavLink>Login History</a>
+        <ng-template ngbNavContent>
+          <app-partner-login-history
+            [partnerId]="partnerId"
+          ></app-partner-login-history>
+        </ng-template>
+      </li>
+
+      <!-- <li [ngbNavItem]="3">
+        <a ngbNavLink>System Logs</a>
+        <ng-template ngbNavContent>
+          <app-partner-system-logs [partnerId]="partnerId"></app-partner-system-logs>
+        </ng-template>
+      </li> -->
+    </ul>
+
+    <div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-0"></div>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+<div class="container mt-3">
+  <div class="row mb-1">
+    <div class="col">
+      <p class="status">
+        <strong>Status:</strong> {{ completion_status }} {{ completion_percentage }}%
+      </p>
+      <p class="clarification-remarks" *ngIf="completion_status === 'CLARIFICATION' || remarkStatus === 'REVIEW'">
+        <strong>Clarification:</strong> {{ clarificationStatus }}
+      </p>
+    </div>
+    
+    <div class="col-auto">
+      <button class="btn btn-outline-primary clarification" *ngIf="(profile === 'ROLE_PARTNER' || profile === 'ROLE_SUPER-ADMIN') && remarkStatus === 'CLOSED'" (click)="addClarification()">
+        Add Clarification
+      </button>
+      <button class="btn btn-outline-primary clarification" *ngIf="(profile === 'ROLE_PARTNER' || profile === 'ROLE_SUPER-ADMIN') && remarkStatus === 'REVIEW'" (click)="closeClarification()">
+        Close Clarification
+      </button>
+      <button
+      class="btn btn-outline-primary clarification"
+      *ngIf="(profile === 'ROLE_PARTNER' || profile === 'ROLE_SUPER-ADMIN') && remarkStatus === 'OPEN'"
+     
+    >
+    Clarification request sent to Agent
+    </button>
+    <div class="mx-auto text-center" *ngIf="loading">
+      <div class="spinner-border text-primary mt-3" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="row">
+    
+    <div class="col-12 col-lg-3">
+      <ul ngbNav #fillJustifyNav="ngbNav" class="nav-tabs nav-fill custom-vertical-tabs"  [(activeId)]="activeId">
+        <li [ngbNavItem]="i" *ngFor="let item of documentType; let i = index" (click)="loadDocumentData(item?.id)">
+          <a ngbNavLink [class.active-tab]="item.id === activeId">{{ item?.name }}</a>
+          <ng-template ngbNavContent>
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12">
+                  <div *ngIf="loading" class="text-center">
+                    <div class="spinner-border bg-spinner" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                  <div *ngIf="!loading">
+                    <div *ngIf="documentDetails?.length > 0">
+                      <div class="row">
+                        <div *ngFor="let document of documentDetails" class="col-md-4">
+                          <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title">{{ document?.title }}</h5>
+                              <div class="text-center">
+                                <ng-container *ngIf="!document?.documentUrl">
+                                  <img [src]="defaultImage" alt="Default Image" style="width: 100px; height: 100px; cursor: pointer;">
+                                </ng-container>
+                                <ng-container *ngIf="document?.documentUrl">
+                                  <ng-container *ngIf="isPDF(document.documentUrl); else imageContent">
+                                    <img src='/assets/img/pdf-image.png' alt="PDF Icon" style="width: 100px; height: 100px; cursor: pointer;"
+                                         (click)="openDocumentInNewPage(document.documentUrl)">
+                                  </ng-container>
+                                  <ng-template #imageContent>
+                                    <img [src]="document?.documentUrl" alt="Document Image" style="width: 100px; height: 100px; cursor: pointer;"
+                                         (click)="openDocumentInNewPage(document.documentUrl)">
+                                  </ng-template>
+                                </ng-container>
+                              </div>
+                              
+                              <div class="text-center mt-2">
+                                <div class="mb-2">
+                                  <button class="btn btn-outline-primary" (click)="openDocumentInNewPage(document.documentUrl)">
+                                    View File
+                                  </button>
+                                </div>
+                                <div>
+                                  <button class="btn btn-outline-primary" (click)="downloadDocument(document.documentUrl)">
+                                    Download
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="documentDetails?.length === 0" class="text-center">
+                      <p>No documents available.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+      </ul>
+    </div>
+    <div class="col-12 col-lg-9">
+      <div [ngbNavOutlet]="fillJustifyNav"></div>
+    </div>
+  </div>
+</div>

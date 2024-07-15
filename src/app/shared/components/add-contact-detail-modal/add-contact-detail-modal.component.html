@@ -1,0 +1,72 @@
+<div>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Add Contact Detail</h5>
+      <button (click)="closeModal()" aria-label="Close" class="btn-close" type="button"></button>
+    </div>
+    <div class="modal-body" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Contact Name *</label>
+          <div class="input-group has-validation">
+            <input class="form-control" formControlName="name" type="text" autocomplete="false"/>
+            <div class="invalid-feedback">Please enter Contact Name.</div>
+          </div>
+          <small
+            *ngIf="
+              form.get('name')?.touched &&
+              form.get('name')?.hasError('required')
+            "
+            class="text-danger"
+          >Required Field</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Contact Email *</label>
+          <div class="input-group has-validation">
+            <input class="form-control" formControlName="email" type="email" />
+            <div class="invalid-feedback">Please enter Contact Email.</div>
+          </div>
+          <small
+            *ngIf="
+              form.get('email')?.touched &&
+              form.get('email')?.hasError('required')
+            "
+            class="text-danger"
+          >Required Field</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Title *</label>
+          <div class="input-group has-validation">
+            <input class="form-control" formControlName="title" type="text" />
+            <div class="invalid-feedback">Please enter Job Title.</div>
+          </div>
+          <small
+            *ngIf="
+              form.get('title')?.touched &&
+              form.get('title')?.hasError('required')
+            "
+            class="text-danger"
+          >Required Field</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Contact Phone *</label>
+          <div class="input-group has-validation">
+            <input class="form-control" formControlName="phoneNumber" type="text" />
+            <div class="invalid-feedback">Please enter Contact Phone.</div>
+          </div>
+          <small
+            *ngIf="
+              form.get('phoneNumber')?.touched &&
+              form.get('phoneNumber')?.hasError('required')
+            "
+            class="text-danger"
+          >Required Field</small>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="modal-footer">
+      <button (click)="activeModal.close('Close click')" class="btn btn-secondary" type="button">Close</button>
+      <button (click)="addContactPerson()" class="btn btn-primary" type="button">Confirm</button>
+    </div>
+  </div>

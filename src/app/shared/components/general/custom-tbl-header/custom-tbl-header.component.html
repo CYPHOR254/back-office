@@ -1,0 +1,78 @@
+<div class="row mt-2 ">
+  <div class="d-flex align-items-center flex-wrap text-nowrap gap-3">
+
+
+
+
+
+    <div class="text-center mx-0">
+      <div class="form-group text-center">
+        <input (ngModelChange)="getDate($event)" [(ngModel)]="queryDate" [maxDate]="todayDate"
+          [bsConfig]="{containerClass: 'theme-dark-blue', isAnimated: true, rangeInputFormat : 'MMMM Do YYYY', dateInputFormat: 'MMMM Do YYYY,', showWeekNumbers: false}"
+          autocomplete="off" autocomplete="off" bsDaterangepicker class="form-control text-center" name="queryDate"
+          placeholder="Select Date Range" type="text">
+      </div>
+    </div>
+
+    <div class="text-center ms-2">
+      <div class="form-group text-center small">
+        <input (keyup)="searchResultsFunction($event)" class="form-control text-center" name="universalSearch"
+          placeholder="Search...." type="text">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="mt-2">
+  <div class="d-flex align-items-end text-nowrap">
+
+
+    <div class="input-group wd-200 me-2 mb-2 mb-md-0"></div>
+
+
+
+    <ng-container *ngIf="!hideExtraOptions">
+      <div ngbDropdown>
+        <!-- <button
+          class="btn btn-outline-primary btn-icon-text me-2 mb-2 mb-md-0 btn-sm"
+          id="dropdownBasic0"
+          ngbDropdownToggle
+        >
+          <i appFeatherIcon class="btn-icon-prepend" data-feather="eye"></i>
+          Show/Hide Columns
+        </button> -->
+        <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <li>
+            <input type="checkbox" id="Select All" (click)="allColumnsChecked ? uncheckAll() : checkAll()"
+              [checked]="allColumnsChecked" />
+            <label [attr.for]="allColumnsChecked">{{
+              allColumnsChecked ? "Unselect All" : "Select All"
+              }}</label>
+          </li>
+          <li *ngFor="let col of allColumns">
+            <input type="checkbox" [id]="col.name" (click)="toggle(col)" [checked]="isChecked(col)" />
+            <label [attr.for]="col.name"> {{ col.name }}</label>
+          </li>
+        </ul>
+      </div>
+      <div ngbDropdown>
+        <button class="btn btn-outline-primary btn-icon-text me-2 mb-2 mb-md-0 btn-sm" id="dropdownBasic1"
+          ngbDropdownToggle>
+          Export
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button ngbDropdownItem (click)="exportPDF()">PDF</button>
+          <button ngbDropdownItem (click)="exportXLSX()">XLSX</button>
+          <button ngbDropdownItem (click)="exportCSV()">CSV</button>
+        </div>
+      </div>
+    </ng-container>
+
+    <button (click)="openAddItemModal()" class="btn btn-primary btn-icon-text mb-2 mb-md-0 btn-sm" type="button"
+      *ngIf="showAddButton">
+      <i class="bi bi-plus"></i> Add {{ title }}
+    </button>
+  </div>
+</div>

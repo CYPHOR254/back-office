@@ -1,0 +1,66 @@
+<div class="container mb-2">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a routerLink="/agents/list-agents">Agents</a>
+      </li>
+      <li aria-current="page" class="breadcrumb-item active">View Agents</li>
+    </ol>
+  </nav>
+
+  <div class="row mb-3">
+    <div class="col-12 col-md-4 mb-3">
+      <h4 class="mb-5">Agent Details</h4>
+
+      <ul class="list-group">
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center text-sm no-margin"
+        >
+          Name:
+          <span class="text-right text-sm">{{ SchoolDetails?.name }}</span>
+        </li>
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center text-sm no-margin"
+        >
+          Email:
+          <span class="text-right text-sm">{{ SchoolDetails?.email }}</span>
+        </li>
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center text-sm no-margin"
+        >
+          Phone Number:
+          <span class="text-right text-sm">{{
+            SchoolDetails?.phoneNumber | uppercase
+          }}</span>
+        </li>
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center text-sm no-margin"
+        >
+          Id Number:
+          <span class="text-right text-sm">{{
+            SchoolDetails?.idNumber 
+          }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-12 col-md-8">
+      <div class="row">
+        <div class="col-12 col-md-8 mb-3">
+          <h4 [routerLink]="['/agents/schools']">Schools Added</h4>
+        </div>
+        <div class="col-12 col-md-4 mb-3">
+          <div class="user-actions d-flex justify-content-end">
+            <button
+              class="btn btn-outline-primary ml-auto"
+              [routerLink]="['/agents/agent-audit-trail']"
+            >
+              Audit Trail
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</div>
