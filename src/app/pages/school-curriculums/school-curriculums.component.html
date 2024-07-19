@@ -35,7 +35,7 @@
           <form (ngSubmit)="isEditMode ? updateCurriculum() : addCurriculum()">
             <div class="form-group">
               <label for="curriculum">Curriculum</label>
-              <input type="text" id="curriculum" [(ngModel)]="currentCurriculum.curriculum" name="curriculum" class="form-control" required />
+              <input type="text" id="curriculum" [(ngModel)]="currentCurriculum.curriculum" name="curriculumName" class="form-control" required />
             </div>
             <button type="submit" class="btn btn-success">{{ isEditMode ? 'Update' : 'Add' }}</button>
           </form>

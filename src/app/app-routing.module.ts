@@ -16,7 +16,7 @@ const routes: Routes = [
   {
     path: "",
     component: DashboardLayoutComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],  
     children: [
       {
         path: "",
@@ -114,7 +114,7 @@ const routes: Routes = [
       {
         path: "change-own-password",
         component: ChangePasswordComponent,
-        canActivate: [AuthGuard],
+        // canActivate: [AuthGuard],
       },
       {
         path: "user-profile",

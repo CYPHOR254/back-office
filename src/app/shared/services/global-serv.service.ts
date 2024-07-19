@@ -11,10 +11,12 @@ export class GlobalServService {
   authHost: string;
 
   redirectUrl: string = '';
+  edu_url: string;
 
   constructor() {
     this.apiHost = environment.base_url;
     this.authHost = environment.auth_url;
+    this.edu_url = environment.edu_url
   }
 
   public static emailRegex: string =

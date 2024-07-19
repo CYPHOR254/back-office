@@ -650,6 +650,7 @@ export class EditSchoolComponent {
   curriculums: Curriculum[] = [];
   schoolTypes: SchoolType[] = [];
   logoPreviewUrl: string | ArrayBuffer | null = null;
+  selectedSchool: any | null = null;
 
   constructor(private fb: FormBuilder) {}
 

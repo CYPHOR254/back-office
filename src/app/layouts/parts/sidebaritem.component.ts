@@ -26,7 +26,9 @@ function showMenuItemFunction(profiles: any) {
 @Component({
   selector: 'app-sidebaritem',
   template: `<li class="nav-item" *ngFor="let mit of menuItems">
-    <div *ngIf="showMenuItemFunction(mit.profile)">
+    <!-- <div *ngIf="showMenuItemFunction(mit.profile)"> -->
+
+          <div>
 
     <app-sidebaritem-inner *ngIf="hasSubMenu(mit)" [menuItem]="mit"></app-sidebaritem-inner>
     <a [ngClass]="!isChildLink?'nav-link collapsed':''" [routerLink]="mit.link" *ngIf="!hasSubMenu(mit)">
@@ -58,7 +60,8 @@ export class SidebaritemComponent {
   selector: 'app-sidebaritem-inner',
   template: `
 
-    <div *ngIf="showMenuItem(menuItem.profile)">
+    <!-- <div *ngIf="showMenuItem(menuItem.profile)"> -->
+          <div>
       <a class="nav-link collapsed" (click)="isCollapsed = !isCollapsed" href="javascript:void(0) ">
         <i class="{{menuItem.icon}}"></i>
         <span>{{menuItem.title}}</span>

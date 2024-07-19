@@ -4,14 +4,14 @@
       <h1>System Admins</h1>
     </div>
     <app-custom-tbl-header
-      [allColumns]="allColumns"
+      [allColumns]="columns"
       [rows]="filteredRows.length > 0 ? filteredRows : rows"
       [title]="title"
       [rows]="admin$ | async"
       (searchResultsEvent)="searchResultUniversal($event)"
       (filterDateEvent)="searchResultByDate($event)"
       [showAddButton]="true"
-      (openAddModalEvent)="openEditSystemAdminModal(null)"
+      (openAddModalEvent)="addAdmin()"
       (changeColumnsEvent)="updateColumns($event)"
     ></app-custom-tbl-header>
   </div>

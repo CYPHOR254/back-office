@@ -33,34 +33,34 @@ export class SidebarComponent implements OnInit {
     this.menuItems = [
       {
         title: 'Dashboard',
-        link: '',
+        link: '/dashboard',
         icon: 'bi bi-grid',
-        profile: ['ROLE_SUPER-ADMIN', , 'ROLE_PARTNER'],
+        // profile: ['ROLE_SUPER-ADMIN', , 'ROLE_PARTNER'],
       },
 
       {
         title: 'Schools',
         link: '/schools/list-schools',
         icon: 'bi bi-buildings',
-        profile: ['ROLE_SUPER-ADMIN', 'ROLE_PARTNER'],
-      },
+        // profile: ['ROLE_SUPER-ADMIN', 'ROLE_PARTNER'],
+      }, 
       {
         title: 'Admins',
         link: '/system-admin/list-admins',
         icon: 'bi bi-person-fill-lock',
-        profile: ['ROLE_SUPER-ADMIN'],
+        // profile: ['ROLE_SUPER-ADMIN'],
       },
       {
         title: 'Agents',
         link: '/agents/list-agents',
         icon: 'bi bi-person-lines-fill',
-        profile: ['ROLE_SUPER-ADMIN'],
+        // profile: ['ROLE_SUPER-ADMIN'],
       },
       {
         title: 'Partners',
         link: '/partners/list-partners',
         icon: 'bi bi-people',
-        profile: ['ROLE_SUPER-ADMIN'],
+        // profile: ['ROLE_SUPER-ADMIN'],
       },
       // {
       //   title: 'System Users',
@@ -72,9 +72,32 @@ export class SidebarComponent implements OnInit {
         title: 'School Curriculum',
         link: '/school-curriculum',
         icon: 'bi bi-person-fill-lock',
-        profile: ['ROLE_SUPER-ADMIN'],
+        // profile: ['ROLE_SUPER-ADMIN'],
       },
+      {
+        title: 'Emis-Schools',
+        link: '',
+        icon: 'bi bi-buildings',
+        // profile: ['ROLE_SUPER-ADMIN'],
+        childs: [
+          {
+            title: 'Teachers',
+            link: '/rbac/list-profiles',
+            // profile: ['ROLE_SUPER-ADMIN'],
+          },
+          {
+            title: 'Students',
+            link: '/rbac/list-roles',
+            // profile: ['ROLE_SUPER-ADMIN'],
+          },
+          {
+            title: 'Guardians',
+            link: '/rbac/list-roles',
+            // profile: ['ROLE_SUPER-ADMIN'],
+          },
 
+        ],
+      },
       // {
       //   title: 'Profile',
       //   link: '',

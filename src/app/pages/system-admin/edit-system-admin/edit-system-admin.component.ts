@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { ApiService } from '../../../api.service'; // Adjust path based on your project structure
 
 @Component({
   selector: 'app-edit-system-admin',
@@ -17,7 +18,8 @@ export class EditSystemAdminComponent implements OnInit {
   constructor(
     public activeModal: NgbActiveModal,
     private fb: FormBuilder,
-    private modalService: NgbModal
+    private apiService: ApiService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -28,15 +30,16 @@ export class EditSystemAdminComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       nationalId: [0, [Validators.required, Validators.min(0)]],
       phoneNo: ['', Validators.required],
-      agencyName: ['', Validators.required],
-      emergencyContact: ['', Validators.required]
+      department: ['', Validators.required],
+      officePhoneNo: ['', Validators.required],
+      employmentNo: ['', Validators.required],
     });
 
     if (this.formData) {
       this.form.patchValue(this.formData);
-      this.title = 'Edit Agent';
+      this.title = 'Edit Admin';
     } else {
-      this.title = 'Add Agent';
+      this.title = 'Add Admin';
     }
   }
 
@@ -47,12 +50,21 @@ export class EditSystemAdminComponent implements OnInit {
   submitData() {
     if (this.form.valid) {
       this.isLoading = true;
-      // Perform submit actions here
-      // For example, call a service to save the data
+      const adminId = this.formData.adminId; // Assuming adminId is part of formData
+      const updatedAdminData = this.form.value;
 
-      // After the save operation
-      this.isLoading = false;
-      this.activeModal.close({ status: 'success', data: this.form.value });
+      this.apiService.updateSystemAdmin(adminId, updatedAdminData).subscribe(
+        (response) => {
+          this.isLoading = false;
+          this.toastr.success('Admin updated successfully', 'Success');
+          this.activeModal.close({ status: 'success', data: response });
+        },
+        (error) => {
+          this.isLoading = false;
+          console.error('Error updating admin:', error);
+          this.toastr.error('Failed to update admin', 'Error');
+        }
+      );
     }
   }
 }

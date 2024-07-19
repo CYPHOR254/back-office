@@ -1,4 +1,9 @@
-import { Component, Input, OnInit } from "@angular/core";
+import {
+  Component,
+  Input,
+  OnInit,
+
+} from "@angular/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
 import {
@@ -14,7 +19,6 @@ import { HttpServService } from "src/app/shared/services/http-serv.service";
 import { AddAgentComponent } from "../add-agent/add-agent.component";
 import { EditAgentComponent } from "../edit-agent/edit-agent.component";
 import { UserActionsModalComponent } from "src/app/shared/components/user-actions-modal/user-actions-modal.component";
-import { AssignProfileDialogComponent } from "src/app/shared/components/assign-profile-dialog/assign-profile-dialog.component";
 
 @Component({
   selector: "app-agents",
@@ -22,6 +26,8 @@ import { AssignProfileDialogComponent } from "src/app/shared/components/assign-p
   styleUrls: ["./list-agents.component.scss"],
 })
 export class ListAgentsComponent implements OnInit {
+  public modalRef!: NgbModalRef;
+  // @Input() title: any;
   @Input() formData: any;
 
   loading: boolean = true;
@@ -29,24 +35,20 @@ export class ListAgentsComponent implements OnInit {
   filteredRows: any = [];
   defaultNavActiveId = 1;
   allRecords: any;
-  title: string = "schools";
+  title: string = "Agents";
   actions = ["View", "Edit", "Delete", "Activate"];
   totalRecords: number = 0;
   subs: Subscription[] = [];
   profilesList: any[] = [];
   channelOptions: any[] = [];
   viewedAgent: any;
-  form: any;
-  isLoading!: boolean;
-
-  public modalRef!: NgbModalRef;
 
   constructor(
     private httpService: HttpServService,
     private modalService: NgbModal,
     private toastr: ToastrService,
     private router: Router
-  ) { }
+  ) {}
 
   columns = [
     // {name: 'ID', prop: 'frontendId'},
@@ -54,16 +56,14 @@ export class ListAgentsComponent implements OnInit {
     { name: "Middle Name", prop: "middleName" },
     { name: "Last Name", prop: "lastName" },
     { name: "Phone Number", prop: "phoneNumber" },
-    { name: "Email", prop: "email" },
     // {name: 'idNumber', prop: 'idNumber'},
-    // {name: 'CreatedOn', prop: 'createOn'},
-    // {name: 'CreatedBy', prop: 'createBy'},
+    {name: 'CreatedOn', prop: 'createOn'},
     { name: "Actions", prop: "actions" },
   ];
 
   allColumns = [...this.columns];
-  agentsList$: Observable<any> =of ([]);
-
+  agentsList$: Observable<any> = of([]);
+  
   ngOnDestroy(): void {
     this.subs.forEach((sb) => sb.unsubscribe());
   }
@@ -75,44 +75,44 @@ export class ListAgentsComponent implements OnInit {
   getIndividualData() {
     this.loading = true;
     const model = null;
-    this.agentsList$ = this.httpService
-      .postReq("portal/api/v1/agents/getall", model)
-      .pipe(
-        map((resp: any) => {
-          if (resp["status"] === 0) {
-            let response = resp["data"];
-            console.log(response);
-            this.allRecords = resp["data"];
+    this.agentsList$ = this.httpService.postReq("portal/api/v1/agents/getall", model).pipe(
+      map((resp: any) => {
+        if (resp["status"] === 0) {
+          let response = resp["data"];
+          console.log(response);
+          this.allRecords = resp['data'];
 
-            this.rows = response.map((item: any, index: any) => {
-              const res = {
-                ...item,
-                frontendId: index + 1,
-              };
-              return res;
-            });
-            this.rows = this.rows.filter((row: any) => row !== undefined);
-            this.totalRecords = this.rows.length;
-            this.loading = false;
-            return this.rows;
-          } else {
-            this.loading = false;
-            return of([]);
-          }
-        }),
-        catchError((error: any) => {
+          this.rows = response.map((item: any, index: any) => {
+  
+
+            const res = {
+              ...item,
+              frontendId: index + 1,
+            };
+            return res;
+          });
+          this.rows = this.rows.filter((row: any) => row !== undefined);
+          this.totalRecords = this.rows.length;
           this.loading = false;
-          if (error instanceof TimeoutError) {
-            this.toastr.error(error["message"], "API Timeout");
-          } else {
-            this.toastr.error(
-              error["statusText"] || error["message"],
-              "Data Not Fetched"
-            );
-          }
+          return this.rows;
+        } else {
+          this.loading = false;
           return of([]);
-        })
-      );
+        }
+      }),
+      catchError((error: any) => {
+        this.loading = false;
+        if (error instanceof TimeoutError) {
+          this.toastr.error(error["message"], "API Timeout");
+        } else {
+          this.toastr.error(
+            error["statusText"] || error["message"],
+            "Data Not Fetched"
+          );
+        }
+        return of([]);
+      })
+    );
   }
   updateColumns(updatedColumns: any) {
     this.columns = [...updatedColumns];
@@ -124,11 +124,14 @@ export class ListAgentsComponent implements OnInit {
 
     if (eventData.action == "View") {
       this.router.navigate([`/agents/view-agent/${this.viewedAgent}`]);
-    } else if (eventData.action == "Activate") {
-      this.activateAgent(eventData.row);
-    } else if (eventData.action == "Edit") {
+    } 
+    else if (eventData.action == "Activate") {
+      this.router.navigate([`/agents/activate-agent/${this.viewedAgent}`]);
+    } 
+     else if (eventData.action == "Edit") {
       this.editAgent(eventData.row);
-    } else if (eventData.action == "Delete") {
+    } 
+    else if (eventData.action == "Delete") {
       this.disableAgent(eventData.row);
     }
   }
@@ -136,7 +139,7 @@ export class ListAgentsComponent implements OnInit {
   updateFilteredRowsEvent(data: string) {
     this.filteredRows = data;
   }
-  addSchool() {
+  addAgent() {
     this.modalRef = this.modalService.open(AddAgentComponent, {
       centered: true,
       animation: true,
@@ -173,40 +176,6 @@ export class ListAgentsComponent implements OnInit {
     );
   }
 
-  activateAgent(row: any) {
-    this.modalRef = this.modalService.open(AssignProfileDialogComponent, {
-      centered: true,
-    });
-    this.modalRef.componentInstance.title = `Activate Agent`;
-    this.modalRef.componentInstance.buttonLabel = `Activate Agent`;
-    this.modalRef.componentInstance.formData = row;
-    this.modalRef.componentInstance.body = `Do you want to  active this Agent?`;
-    this.modalRef.result.then((result) => {
-      console.log("here is the result");
-      console.log(result.status, "here is the result");
-      if (result?.status === "success") {
-        this.isLoading = true;
-
-        let model = {
-          agentId: row.id,
-          profileId: result?.profileId,
-          channel: "APP",
-        };
-
-        this.httpService
-          .postReq("portal/api/v1/systemuser/make/agent/systemuser", model)
-          .subscribe((result: any) => {
-            if (result.status === 0) {
-              this.toastr.success("Agent activation successfully", "Success");
-              console.log("result");
-            } else {
-              this.toastr.error(result?.message, "Error");
-            }
-          });
-      }
-    });
-  }
-
   private disableAgent(row: any) {
     this.modalRef = this.modalService.open(UserActionsModalComponent, {
       centered: true,
@@ -238,8 +207,8 @@ export class ListAgentsComponent implements OnInit {
               this.loading = false;
               this.toastr.error(
                 error["statusText"] ||
-                error["message"] ||
-                error.error["message"],
+                  error["message"] ||
+                  error.error["message"],
                 "Agent not suspended."
               );
             },
@@ -249,25 +218,30 @@ export class ListAgentsComponent implements OnInit {
       }
     });
   }
-
+  
   searchResultUniversal(event: any) {
+
     const filteredData = this.allRecords?.filter((item: any) => {
       return Object.values(item)?.some((value: any) => {
-        let str = value + "";
-        return str?.toLowerCase()?.includes(event?.toLowerCase());
-      });
-    });
-
+        let str = value + '';
+        return str?.toLowerCase()?.includes(event?.toLowerCase())
+      }
+      )
+    }
+    );
+    
     this.agentsList$ = of(filteredData);
+    
   }
 
+  
   searchResultByDate(event: any) {
-    const filteredData = this.allRecords.filter((item: any) => {
+    const filteredData = this.allRecords.filter((item:any) => {
       const createdOnDate = new Date(item.createdOn);
-      return (
-        createdOnDate >= event?.startDate && createdOnDate <= event?.endDate
-      );
+      return createdOnDate >= event?.startDate && createdOnDate <= event?.endDate;
     });
     this.agentsList$ = of(filteredData);
+    
   }
+
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Curriculum, SchoolType } from 'src/app/api.service';
+import { ApiService, Curriculum, SchoolType, Category } from 'src/app/api.service';
 
 @Component({
   selector: 'app-add-school',
@@ -8,7 +8,7 @@ import { Curriculum, SchoolType } from 'src/app/api.service';
   styleUrls: ['./add-school.component.scss']
 })
 export class AddSchoolComponent implements OnInit {
-  editSchoolForm!: FormGroup;
+  addSchoolForm!: FormGroup;
   countiesData: any[] = [
     {
       "name": "Baringo",
@@ -646,16 +646,19 @@ export class AddSchoolComponent implements OnInit {
         "West Pokot"
       ]
     }
-  ];  
+  ];
   selectedEditCounty: any;
   curriculums: Curriculum[] = [];
   schoolTypes: SchoolType[] = [];
+  schoolGenders: any[] = [];
+  schoolCategories: Category [] = []; // Change the type to Category[]
   logoPreviewUrl: string | ArrayBuffer | null = null;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private apiService: ApiService
+  ) { }  // Inject the service
 
   ngOnInit(): void {
-    this.editSchoolForm = this.fb.group({
+    this.addSchoolForm = this.fb.group({
       schoolName: ['', Validators.required],
       emailAddress: ['', [Validators.required, Validators.email]],
       mobileNo: ['', Validators.required],
@@ -666,21 +669,91 @@ export class AddSchoolComponent implements OnInit {
       curriculumId: ['', Validators.required],
       schoolCategoryId: ['', Validators.required],
       moeRegistrationNo: ['', Validators.required],
+      schoolType: ['', Validators.required],
+      schoolGender: ['', Validators.required],
       logoUpload: [null, Validators.required]
     });
-    // this.getCurriculums();        
+    this.getCurriculums();
+    this.getSchoolTypes();
+    this.getSchoolGenders();
+    this.getCategories();
+
+
   }
+
+  getCategories(): void {
+    this.apiService.getCategories().subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && Array.isArray(response.result)) {
+          this.schoolCategories = response.result; // Assign to schoolCategories
+          console.log(" ....fetched school category", response.result);
+        } else {
+          console.error('Failed to fetch school category', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching school category', error);
+      }
+    );
+  }
+  getCurriculums(): void {
+    this.apiService.getCurriculums().subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && Array.isArray(response.result)) {
+          this.curriculums = response.result;
+          console.log(" ....fetched curriculum", response.result);
+
+        } else {
+          console.error('Failed to fetch curriculums:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching curriculums:', error);
+      }
+    );
+  }
+
 
   onEditCountyChange(): void {
-    const selectedCounty = this.countiesData.find(county => county.name === this.editSchoolForm.value.county);
+    const selectedCounty = this.countiesData.find(county => county.name === this.addSchoolForm.value.county);
     this.selectedEditCounty = selectedCounty;
     if (selectedCounty) {
-      this.editSchoolForm.controls['subcounty'].enable();
+      this.addSchoolForm.controls['subcounty'].enable();
     } else {
-      this.editSchoolForm.controls['subcounty'].disable();
+      this.addSchoolForm.controls['subcounty'].disable();
     }
   }
+  getSchoolTypes(): void {
+    this.apiService.getSchoolTypes().subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && Array.isArray(response.result)) {
+          this.schoolTypes = response.result;
+          console.log(" ....fetched SchoolTypes", response.result);
 
+        } else {
+          console.error('Failed to fetch school types:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching school types:', error);
+      }
+    );
+  }
+  getSchoolGenders(): void {
+    this.apiService.getSchoolGenders().subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && Array.isArray(response.result)) {
+          this.schoolGenders = response.result;
+          console.log("Fetched School Genders:", this.schoolGenders);
+        } else {
+          console.error('Failed to fetch school genders:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching school genders:', error);
+      }
+    );
+  }
   handleLogoUpload(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -689,14 +762,25 @@ export class AddSchoolComponent implements OnInit {
         this.logoPreviewUrl = e.target.result;
       };
       reader.readAsDataURL(file);
-      this.editSchoolForm.patchValue({ logoUpload: file });
+      this.addSchoolForm.patchValue({ logoUpload: file });
     }
   }
 
   onSubmitAdd(): void {
-    if (this.editSchoolForm.valid) {
-      // Handle form submission logic
-      console.log(this.editSchoolForm.value);
+    if (this.addSchoolForm.valid) {
+      const formData = new FormData();
+      Object.keys(this.addSchoolForm.controls).forEach(key => {
+        formData.append(key, this.addSchoolForm.get(key)?.value);
+      });
+
+      this.apiService.addSchool(formData).subscribe(
+        response => {
+          console.log('School added successfully', response);
+        },
+        error => {
+          console.error('Error adding school', error);
+        }
+      );
     }
   }
 }

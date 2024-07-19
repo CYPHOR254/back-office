@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService ,Curriculum } from 'src/app/api.service';
+import { ApiService, Curriculum } from '../../api.service';
 
 @Component({
   selector: 'app-school-curriculums',
@@ -21,6 +21,8 @@ export class SchoolCurriculumsComponent implements OnInit {
   fetchCurriculums(): void {
     this.apiService.getCurriculums().subscribe((data) => {
       this.curriculums = data;
+      console.log(data);
+      
     });
   }
 

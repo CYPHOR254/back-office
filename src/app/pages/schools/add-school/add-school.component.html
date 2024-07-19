@@ -1,5 +1,5 @@
 <!-- Add School Modal -->
- <div>
+<div>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form [formGroup]="editSchoolForm" (ngSubmit)="onSubmitAdd()">
+                <form [formGroup]="addSchoolForm" (ngSubmit)="onSubmitAdd()">
                     <div class="mb-3">
                         <label for="schoolName" class="form-label">School Name</label>
                         <input type="text" class="form-control" id="schoolName" formControlName="schoolName">
@@ -55,31 +55,55 @@
                             </option>
                         </select>
                     </div>
-                    <!-- School Type Dropdown -->
+                    <!-- School Category Dropdown -->
                     <div class="mb-3">
-                        <label for="schoolCategory">School Category</label>
-                        <select formControlName="schoolCategoryId" class="form-control" id="schoolCategory">
-                            <option *ngFor="let category of schoolTypes" [value]="category.schoolTypeId">{{
-                                category.name }}
+                        <label for="schoolCategoryId">School Category</label>
+                        <select formControlName="schoolCategoryId" class="form-control" id="schoolCategoryId">
+                            <option *ngFor="let category of schoolCategories" [value]="category.categoryId">
+                                {{ category.category }}
                             </option>
                         </select>
                     </div>
+
+
+
+                    <!-- MOE Registration No -->
                     <div class="mb-3">
                         <label for="moeRegistrationNo" class="form-label">MOE Registration No</label>
-                        <input type="text" class="form-control" id="moeRegistrationNo" formControlName="moeRegistrationNo">
+                        <input type="text" class="form-control" id="moeRegistrationNo"
+                            formControlName="moeRegistrationNo">
                     </div>
+                    <!-- School Type Dropdown -->
+                    <div class="mb-3">
+                        <label for="schoolCategory">School Type</label>
+                        <select formControlName="schoolCategory" class="form-control" id="schoolCategory">
+                            <option *ngFor="let type of schoolTypes" [value]="type.schoolTypeId">{{ type.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- School Gender Dropdown -->
+                    <div class="mb-3">
+                        <label for="schoolGender">School Gender</label>
+                        <select formControlName="schoolGender" class="form-control" id="schoolGender">
+                            <option *ngFor="let gender of schoolGenders" [value]="gender.schoolGenderId">{{ gender.name
+                                }}</option>
+                        </select>
+                    </div>
+
                     <!-- Add School Logo -->
                     <div class="mb-3">
                         <label for="logoUpload">Logo</label>
-                        <input type="file" id="logoUpload" formControlName="logoUpload" (change)="handleLogoUpload($event)">
+                        <input type="file" id="logoUpload" (change)="handleLogoUpload($event)">
                         <small class="form-text text-muted">Upload school logo</small>
                         <img *ngIf="logoPreviewUrl" [src]="logoPreviewUrl" class="img-fluid mt-2" alt="Logo Preview">
                     </div>
-                    <button type="submit" class="btn btn-primary" [disabled]="editSchoolForm.invalid">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-left: 15px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="addSchoolForm.invalid">Save
+                        changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        style="margin-left: 15px;">Cancel</button>
                 </form>
             </div>
         </div>
     </div>
-    </div>
-    
+</div>
