@@ -17,6 +17,7 @@ import {
 } from "rxjs";
 import { HttpServService } from "src/app/shared/services/http-serv.service";
 import { ToastrService } from "ngx-toastr";
+import { ApiService } from "src/app/api.service";
 
 @Component({
   selector: "app-list-schools",
@@ -51,14 +52,32 @@ export class ListSchoolsComponent implements OnInit {
     public activatedRoute: ActivatedRoute,
     public fb: FormBuilder,
     public router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private apiService: ApiService
   ) {}
 
   columns = [
-    { name: "Name", prop: "name" },
-    { name: "Created On", prop: "createdOn" },
+    // { name: "School ID", prop: "schoolId" },
+    { name: "School Name", prop: "schoolName" },
+    { name: "School Gender", prop: "schoolGender" },
+    { name: "Curriculum", prop: "curriculum" },
+    { name: "Resource", prop: "resource" },
+    { name: "School Type", prop: "schoolType" },
+    { name: "Category", prop: "category" },
+    { name: "Email Address", prop: "emailAddress" },
+    { name: "Mobile No", prop: "mobileNo" },
+    // { name: "Postal Address", prop: "postalAddress" },
+    // { name: "Postal Code", prop: "postalCode" },
+    { name: "MOE Registration No", prop: "moeRegistrationNo" },
     { name: "County", prop: "county" },
+    { name: "SubCounty", prop: "subCounty" },
+    // { name: "Logo", prop: "logo" },
+    // { name: "Longitude", prop: "longitude" },
+    // { name: "Latitude", prop: "latitude" },
+    { name: "Status", prop: "status" },
+    // { name: "School Admin Email", prop: "schoolAdminEmail" }
   ];
+  
 
   allColumns = [...this.columns];
 
@@ -71,57 +90,33 @@ export class ListSchoolsComponent implements OnInit {
       }
     });
 
-    this.getSchoolSchoolsData();
+    this.fetchSchools();
   }
 
   ngOnDestroy(): void {
     this.subs.forEach((sub) => sub.unsubscribe());
   }
-  getSchoolSchoolsData() {
+  fetchSchools() {
     this.loading = true;
-    const model = {
-      agentId: this.agentId,
-    };
-    this.schoolList$ = this.httpService
-      .postReq("portal/api/v1/schools/for-agent", model)
-      .pipe(
-        map((resp: any) => {
-          if (resp["status"] === 0) {
-            let response = resp["data"];
-            console.log(response, "schools for agents");
-
-            this.rows = response.map((item: any, index: any) => {
-              const res = {
-                ...item,
-                frontendId: index + 1,
-              };
-              return res;
-            });
-            this.rows = this.rows.filter((row: any) => row !== undefined);
-            this.totalRecords = this.rows.length;
-            this.loading = false;
-            return this.rows;
-          } else {
-            this.loading = false;
-            return of([]);
-          }
-        }),
-        catchError((error: any) => {
-          this.loading = false;
-          if (error instanceof TimeoutError) {
-            this.toastr.error(error["message"], "API Timeout");
-          } else {
-            this.toastr.error(
-              error["statusText"] || error["message"],
-              "Data Not Fetched"
-            );
-          }
-          return of([]);
-        })
-      );
+    this.apiService.getSchoolsAddedByAgent(this.agentId).pipe(
+      catchError(error => {
+        this.toastr.error('Failed to fetch agent admins', 'Error');
+        this.loading = false;
+        return of([]);
+      })
+    ).subscribe((response: any) => {
+      if (response.statusCode === 200) {
+        this.rows = response.result;
+        this.filteredRows = this.rows;
+        this.totalRecords = this.rows.length;
+        this.toastr.success('Fetched schools added by  agent  successfully', 'Success');
+      } else {
+        this.toastr.error('Failed to fetch agent admins', 'Error');
+      }
+      this.loading = false;
+    });
   }
-
-  triggerEvent(data: string) {
+  triggerEvent(data: string) { 
     let eventData = JSON.parse(data);
     this.viewedSchool = eventData["row"]["id"];
 

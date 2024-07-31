@@ -1,118 +1,137 @@
-<div class="container mt-4">
-  <div class="row mb-4">
-    <div class="col d-flex flex-column">
-      <p class="status">
-        <strong>Status:</strong> {{ completion_status }} {{ completion_percentage }}%
-      </p>
-      <p class="clarification-remarks" *ngIf="completion_status === 'CLARIFICATION' || remarkStatus === 'REVIEW'">
-        <strong>Clarification:</strong> {{ clarificationStatus }}
-      </p>
-    </div>
-    <div class="col-auto">
-      <button class="btn btn-outline-primary clarification"
-              *ngIf="(profile === 'ROLE_PARTNER' || profile === 'ROLE_SUPER-ADMIN') && remarkStatus === 'CLOSED'"
-              (click)="addClarification()">
-              Add Clarification
-      </button>
-      <button class="btn btn-outline-primary clarification"
-              *ngIf="(profile === 'ROLE_PARTNER' || profile === 'ROLE_SUPER-ADMIN') && remarkStatus === 'REVIEW'"
-              (click)="closeClarification()">
-              Close Clarification
-      </button>
-      <button class="btn btn-outline-primary clarification"
-              *ngIf="(profile === 'ROLE_PARTNER' || profile === 'ROLE_SUPER-ADMIN') && remarkStatus === 'OPEN'">
-              Clarification request sent to Agent
-      </button>
-      <div class="mx-auto text-center" *ngIf="loading">
-        <div class="spinner-border text-primary mt-3" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    </div>
+<div *ngIf="loading" class="text-center">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
   </div>
-
+</div>
+<div *ngIf="!loading && schoolDetails">
+  <h5>School Name: <strong>{{ schoolDetails?.name }}</strong></h5>
+  </div>
   <div class="card">
     <div class="card-body">
       <div class="row">
         <div class="col-sm-5 col-md-6">
           <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Name:</span>
-              <span class="text-right p-1">{{ schoolList?.name | titlecase }}</span>
+              <span class="list-title"> <b>School Name:</b></span>
+              <span class="text-right p-1"> {{ schoolDetails?.schoolName | titlecase }}
+              </span>
             </li>
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Email:</span>
-              <span class="text-right p-1">{{ schoolList?.emailAddress | titlecase }}</span>
+              <span class="list-title"> <b>Email:</b></span>
+              <span class="text-right p-1">{{ schoolDetails?.emailAddress }}</span>
             </li>
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Phone Number:</span>
-              <span class="text-right p-1">{{ schoolList?.mobileNumber | titlecase }}</span>
+              <span class="list-title"><b>school Gender:</b> </span>
+              <span class="text-right p-1">{{
+                schoolDetails?.schoolGender | titlecase
+                }}</span>
             </li>
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">School Gender:</span>
-              <span class="text-right p-1">{{ schoolList?.schoolGender | titlecase }}</span>
+              <span class="list-title"> <b>Resource</b> </span>
+              <span class="text-right p-1">{{
+                schoolDetails?.resource | titlecase
+                }}</span>
             </li>
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Curriculum:</span>
-              <span class="text-right p-1">{{ schoolList?.curriculum | titlecase }}</span>
+              <span class="list-title"><b>school Gender: </b></span>
+              <span class="text-right p-1">{{
+                schoolDetails?.schoolGender | titlecase
+                }}</span>
             </li>
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Postal Address:</span>
-              <span class="text-right p-1">{{ schoolList?.postalAddress | titlecase }}</span>
+              <span class="list-title"><b>school Type:</b> </span>
+              <span class="text-right p-1">{{
+                schoolDetails?.schoolType | titlecase
+                }}</span>
             </li>
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Postal Code:</span>
-              <span class="text-right p-1">{{ schoolList?.postalCode | titlecase }}</span>
+              <span class="list-title"><b>County:</b> </span>
+              <span class="text-right p-1">{{
+                schoolDetails?.county | titlecase
+                }}</span>
             </li>
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Moe:</span>
-              <span class="text-right p-1">{{ schoolList?.moeRegistrationNumber | titlecase }}</span>
+              <span class="list-title"><b>Sub-County: </b></span>
+              <span class="text-right p-1">{{
+                schoolDetails?.subCounty | titlecase
+                }}</span>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title"><b>Phone Number:</b> </span>
+              <span class="text-right p-1">{{
+                schoolDetails?.mobileNo | titlecase
+                }}</span>
             </li>
           </ul>
         </div>
-        <div class="col-sm-5 col-md-6">
+        <div class="col-sm-5 .offset-sm-2 .col-md-6 .offset-md-0">
           <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Diocese:</span>
-              <span class="text-right p-1">{{ schoolList?.diocese | titlecase }}</span>
-            </li>
+              <span class="list-title"><b>category:</b></span>
+              <span class="text-right p-1">{{
+                schoolDetails?.category
+                }}</span>
+          </ul>
+          <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Sub County:</span>
-              <span class="text-right p-1">{{ schoolList?.subCounty | titlecase }}</span>
-            </li>
+              <span class="list-title"><b>moeRegistrationNo:</b></span>
+              <span class="text-right p-1">{{
+                schoolDetails?.moeRegistrationNo
+                }}</span>
+
+          </ul>
+          <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">County:</span>
-              <span class="text-right p-1">{{ schoolList?.county | titlecase }}</span>
-            </li>
+              <span class="list-title"><b>postalAddress</b></span>
+              <span class="text-right p-1">{{
+                schoolDetails?.postalAddress
+                }}</span>
+          </ul>
+          <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">State:</span>
-              <span class="text-right p-1">{{ schoolList?.state | titlecase }}</span>
-            </li>
+              <span class="list-title"><b>postal Code</b></span>
+              <span class="text-right p-1">{{
+                schoolDetails?.postalCode
+                }}</span>
+          </ul>
+          <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Road:</span>
-              <span class="text-right p-1">{{ schoolList?.road | titlecase }}</span>
-            </li>
+              <span class="list-title"><b>Longitude</b></span>
+              <span class="text-right p-1">{{
+                schoolDetails?.longitude
+                }}</span>
+          </ul>
+          <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Created On:</span>
-              <span class="text-right p-1">{{ schoolList?.createdOn | date: 'medium' }}</span>
-            </li>
-            <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Created by:</span>
-              <span class="text-right p-1">{{ schoolList?.createdBy | titlecase }}</span>
-            </li>
+              <span class="list-title"><b>Latitude</b></span>
+              <span class="text-right p-1">{{
+                schoolDetails?.latitude
+                }}</span>
           </ul>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-
-<div class="mx-auto text-center" *ngIf="loading">
-  <div class="lds-ellipsis">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-</div>
+  <!-- <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3 navbar-shadow">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/agents/view-agent', agentId]" routerLinkActive="active-nav" [routerLinkActiveOptions]="{ exact: true }">Schools Added</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" [routerLink]="['/agents/view-agent', agentId, 'agent-system-log']" routerLinkActive="active-nav">Agent System Log</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" [routerLink]="['/agents/view-agent', agentId, 'login-history']" routerLinkActive="active-nav">Agent Login History</a>
+              </li>
+            </ul>
+      
+          </div>
+        </div>
+      </nav>
+      <div class="container-fluid">
+        <div class="col-md-12 col-xl-12">
+          <router-outlet></router-outlet>
+        </div>
+      </div> -->

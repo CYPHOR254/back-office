@@ -6,7 +6,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ResetPasswordDialogComponent } from 'src/app/shared/components/reset-password-dialog/reset-password-dialog.component';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { UserProfileComponent } from 'src/app/pages/user-profile/user-profile.component';
+// import { UserProfileComponent } from 'src/app/pages/user-profile/user-profile.component';
 
 @Component({
   selector: 'app-header',
@@ -79,11 +79,11 @@ export class HeaderComponent implements OnInit {
     localStorage.clear();
   }
 
-  openUserProfileModal() {
-    const modalRef = this.modalService.open(UserProfileComponent);
-    modalRef.componentInstance.userName = this.userName;
-    modalRef.componentInstance.profile = this.profile;
-  }
+  // openUserProfileModal() {
+  //   const modalRef = this.modalService.open(UserProfileComponent);
+  //   modalRef.componentInstance.userName = this.userName;
+  //   modalRef.componentInstance.profile = this.profile;
+  // }
   changePassword(){
     
     this.modalRef = this.modalService.open(ResetPasswordDialogComponent, {

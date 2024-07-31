@@ -1,100 +1,147 @@
 <div>
   <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLabel">{{ title }}</h5>
-    <button
-      (click)="closeModal()"
-      aria-label="Close"
-      class="btn-close"
-      type="button"
-    ></button>
+    <button (click)="closeModal()" aria-label="Close" class="btn-close" type="button"></button>
   </div>
-  <div [formGroup]="form" class="modal-body">
+  <div class="modal-body" [formGroup]="form">
     <div class="row">
-      <div class="col-6">
-        <label class="form-label" for="firstName">First Name</label>
-        <input
-          class="form-control"
-          formControlName="firstName"
-          id="firstName"
-          name="firstName"
-          type="text"
-          autocomplete="false"
-        />
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">First Name</label>
+          <input class="form-control" formControlName="firstName" type="text" autocomplete="off" />
+          <small *ngIf="
+              form.get('firstName')?.touched &&
+              form.get('firstName')?.hasError('required')
+            " class="text-danger">Required Field</small>
+        </div>
       </div>
-      <div class="col-6">
-        <label class="form-label" for="middleName">Middle Name</label>
-        <input
-          class="form-control"
-          formControlName="middleName"
-          id="middleName"
-          name="middleName"
-          type="text"
-          autocomplete="false"
-        />
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Middle Name</label>
+          <input class="form-control" formControlName="middleName" type="text" autocomplete="off" />
+          <small *ngIf="
+              form.get('middleName')?.touched &&
+              form.get('middleName')?.hasError('required')
+            " class="text-danger">Required Field</small>
+        </div>
       </div>
-
-      <div class="col-6">
-        <label class="form-label" for="lastName">Last Name</label>
-        <input
-          class="form-control"
-          formControlName="lastName"
-          id="lastName"
-          name="lastName"
-          type="text"
-          autocomplete="false"
-        />
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Last Name</label>
+          <input class="form-control" formControlName="lastName" type="text" autocomplete="off" />
+          <small *ngIf="
+              form.get('lastName')?.touched &&
+              form.get('lastName')?.hasError('required')
+            " class="text-danger">Required Field</small>
+        </div>
       </div>
-
-      <div class="col-6">
-        <label class="form-label" for="businessName">Email</label>
-        <input
-          class="form-control"
-          formControlName="email"
-          id="email"
-          name="email"
-          type="email"
-          autocomplete="false"
-        />
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Email</label>
+          <input class="form-control" formControlName="email" type="email" autocomplete="off" />
+          <small *ngIf="
+              form.get('email')?.touched &&
+              form.get('email')?.hasError('required')
+            " class="text-danger">Required Field</small>
+        </div>
       </div>
-      <div class="col-6">
-        <label class="form-label" for="phoneNumber">Phone Number</label>
-        <input
-          class="form-control"
-          formControlName="phoneNumber"
-          id="phoneNumber"
-          name="phoneNumber"
-          type="number"
-          autocomplete="false"
-        />
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">National ID</label>
+          <input class="form-control" formControlName="nationalId" type="number" autocomplete="off" />
+          <small *ngIf="
+              form.get('nationalId')?.touched &&
+              form.get('nationalId')?.hasError('required')
+            " class="text-danger">Required Field</small>
+          <small *ngIf="
+              form.get('nationalId')?.value < 0 && form.get('nationalId')?.touched
+            " class="text-danger">Cannot be a negative value</small>
+        </div>
       </div>
-
-      <div class="col-6">
-        <label class="form-label" for="idNumber">ID Number</label>
-        <input
-          class="form-control"
-          formControlName="idNumber"
-          id="idNumber"
-          name="idNumber"
-          type="number"
-          autocomplete="false"
-        />
-        <small
-        *ngIf="
-          form.get('idNumber')?.value < 0 && form.get('idNumber')?.touched
-        "
-        class="text-danger"
-      >
-        Cannot be a negative value
-      </small>
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Phone Number</label>
+          <input class="form-control" formControlName="phoneNo" type="number" autocomplete="off" />
+          <small *ngIf="
+              form.get('phoneNo')?.touched &&
+              form.get('phoneNo')?.hasError('required')
+            " class="text-danger">Required Field</small>
+        </div>
       </div>
-
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Firm Name</label>
+          <input class="form-control" formControlName="firmName" type="text" autocomplete="off" />
+          <small *ngIf="
+              form.get('firmName')?.touched &&
+              form.get('firmName')?.hasError('required')
+            " class="text-danger">Required Field</small>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Emergency Contact</label>
+          <input class="form-control" formControlName="emergencyContact" type="text" autocomplete="off" />
+          <small *ngIf="
+              form.get('emergencyContact')?.touched &&
+              form.get('emergencyContact')?.hasError('required')
+            " class="text-danger">Required Field</small>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Business Contact</label>
+          <input class="form-control" formControlName="businessContact" type="text" autocomplete="off" />
+          <small *ngIf="
+              form.get('businessContact')?.touched &&
+              form.get('businessContact')?.hasError('required')
+            " class="text-danger">Required Field</small>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Business Email</label>
+          <input class="form-control" formControlName="businessEmail" type="email" autocomplete="off" />
+          <small *ngIf="
+              form.get('businessEmail')?.touched &&
+              form.get('businessEmail')?.hasError('required')
+            " class="text-danger">Required Field</small>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Resource</label>
+          <select class="form-control" formControlName="resource">
+            <option *ngFor="let res of resources" [value]="res.resourceId">{{ res.resource }}</option>
+          </select>                  
+          <small *ngIf="form.get('resource')?.touched && form.get('resource')?.hasError('required')" class="text-danger">
+            Required Field
+          </small>
+        </div>
+      </div>
+      
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Agreement Start Date</label>
+          <input class="form-control" formControlName="agreementStartDate" type="date" autocomplete="off" />
+          <small *ngIf="
+              form.get('agreementStartDate')?.touched &&
+              form.get('agreementStartDate')?.hasError('required')
+            " class="text-danger">Required Field</small>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Agreement End Date</label>
+          <input class="form-control" formControlName="agreementEndDate" type="date" autocomplete="off" />
+          <small *ngIf="
+              form.get('agreementEndDate')?.touched &&
+              form.get('agreementEndDate')?.hasError('required')
+            " class="text-danger">Required Field</small>
+        </div>
+      </div>
       <p *ngIf="isLoading">
-        <ngb-progressbar
-          [animated]="true"
-          [striped]="true"
-          [value]="95"
-          type="primary"
-        ></ngb-progressbar>
+        <ngb-progressbar type="primary" [value]="95" [striped]="true" [animated]="true"></ngb-progressbar>
       </p>
     </div>
   </div>
@@ -102,23 +149,13 @@
     <button (click)="closeModal()" class="btn btn-secondary" type="button">
       Close
     </button>
-    <button
-      (click)="submitData()"
-      *ngIf="!this.formData"
-      [disabled]="!form.valid || isLoading"
-      class="btn btn-primary"
-      type="button"
-    >
-      Edit Partner
+    <button (click)="submitData()" *ngIf="!this.formData" class="btn btn-primary" type="button"
+      [disabled]="!form.valid || isLoading">
+      Create Partner
     </button>
-    <button
-      (click)="submitData()"
-      *ngIf="this.formData"
-      [disabled]="!form.valid || isLoading"
-      class="btn btn-primary"
-      type="button"
-    >
-      Edit Partner
+    <button (click)="submitData()" *ngIf="this.formData" class="btn btn-primary" type="button"
+      [disabled]="!form.valid || isLoading">
+      Save changes
     </button>
   </div>
 </div>

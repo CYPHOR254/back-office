@@ -1,90 +1,52 @@
 <div>
   <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLabel">{{ title }}</h5>
-    <button (click)="closeModal('agentModal')" aria-label="Close" class="btn-close" type="button"></button>
+    <button (click)="closeModal()" aria-label="Close" class="btn-close" type="button"></button>
   </div>
-  <div class="modal-body" [formGroup]="form">
+  <form [formGroup]="form" (ngSubmit)="submitData()" class="modal-body">
     <div class="row">
-      <div class="col-sm-12">
-        <div class="mb-3">
-          <label class="form-label fw-bold">First Name</label>
-          <input class="form-control" formControlName="firstName" type="text" autocomplete="false" />
-          <small *ngIf="
-              form.get('firstName')?.touched &&
-              form.get('firstName')?.hasError('required')
-            " class="text-danger">Required Field</small>
-        </div>
+      <div class="col-6">
+        <label class="form-label" for="firstName">First Name</label>
+        <input class="form-control" formControlName="firstName" id="firstName" name="firstName" type="text" autocomplete="false" />
       </div>
-      <div class="col-sm-12">
-        <div class="mb-3">
-          <label class="form-label fw-bold">Middle Name</label>
-          <input class="form-control" formControlName="middleName" type="text" autocomplete="false" />
-          <small *ngIf="
-              form.get('middleName')?.touched &&
-              form.get('middleName')?.hasError('required')
-            " class="text-danger">Required Field</small>
-        </div>
+      <div class="col-6">
+        <label class="form-label" for="middleName">Middle Name</label>
+        <input class="form-control" formControlName="middleName" id="middleName" name="middleName" type="text" autocomplete="false" />
       </div>
-
-      <div class="col-sm-12">
-        <div class="mb-3">
-          <label class="form-label fw-bold">Last Name</label>
-          <input class="form-control" formControlName="lastName" type="text" autocomplete="false" />
-          <small *ngIf="
-              form.get('lastName')?.touched &&
-              form.get('lastName')?.hasError('required')
-            " class="text-danger">Required Field</small>
-        </div>
+      <div class="col-6">
+        <label class="form-label" for="lastName">Last Name</label>
+        <input class="form-control" formControlName="lastName" id="lastName" name="lastName" type="text" autocomplete="false" />
       </div>
-      <div class="col-sm-12">
-        <div class="mb-3">
-          <label class="form-label fw-bold">Email</label>
-          <input class="form-control" formControlName="email" type="email" autocomplete="false" />
-          <small *ngIf="
-              form.get('email')?.touched &&
-              form.get('email')?.hasError('required')
-            " class="text-danger">Required Field</small>
-        </div>
+      <div class="col-6">
+        <label class="form-label" for="email">Email</label>
+        <input class="form-control" formControlName="email" id="email" name="email" type="email" autocomplete="false" />
       </div>
-
-      <div class="col-sm-12">
-        <div class="mb-3">
-          <label class="form-label fw-bold">Id Number</label>
-          <input class="form-control" formControlName="idNumber" type="number" autocomplete="off" />
-          <small *ngIf="
-              form.get('idNumber')?.value < 0 && form.get('idNumber')?.touched
-            " class="text-danger">
-            Cannot be a negative value
-          </small>
-        </div>
+      <div class="col-6">
+        <label class="form-label" for="nationalId">National id</label>
+        <input class="form-control" formControlName="nationalId" id="nationalId" name="nationalId" type="number" autocomplete="false" />
+        <small *ngIf="form.get('nationalId')?.value < 0 && form.get('nationalId')?.touched" class="text-danger">Cannot be a negative value</small>
       </div>
-
-
-      <div class="col-sm-12">
-        <div class="mb-3">
-          <label class="form-label fw-bold">Phone Number</label>
-          <input class="form-control" formControlName="phoneNumber" type="number" autocomplete="false" />
-          <small *ngIf="
-              form.get('phoneNumber')?.touched &&
-              form.get('phoneNumber')?.hasError('required')
-            " class="text-danger">Required Field</small>
-        </div>
+      <div class="col-6">
+        <label class="form-label" for="phoneNo">Phone Number</label>
+        <input class="form-control" formControlName="phoneNo" id="phoneNo" name="phoneNo" type="number" autocomplete="false" />
       </div>
-
-      <p *ngIf="isLoading">
-        <ngb-progressbar type="primary" [value]="95" [striped]="true" [animated]="true"></ngb-progressbar>
-      </p>
+      <div class="col-6">
+        <label class="form-label" for="agencyName">Agency Name</label>
+        <input class="form-control" formControlName="agencyName" id="agencyName" name="agencyName" type="text" autocomplete="false" />
+      </div>
+      <div class="col-6">
+        <label class="form-label" for="EmergencyContact">Emergency Contact</label>
+        <input class="form-control" formControlName="EmergencyContact" id="EmergencyContact" name="EmergencyContact" type="number" autocomplete="false" />
+      </div>
     </div>
-  </div>
-  <div class="modal-footer">
-    <button (click)="closeModal('agentModal')" aria-label="Close" class="btn-close" type="button"></button>
-    <button (click)="submitData()" *ngIf="!this.formData" class="btn btn-primary" type="button"
-      [disabled]="!form.valid || isLoading">
-      Create Agent
-    </button>
-    <button (click)="submitData()" *ngIf="this.formData" class="btn btn-primary" type="button"
-      [disabled]="!form.valid || isLoading">
-      Save changes
-    </button>
-  </div>
+    <p *ngIf="isLoading">
+      <ngb-progressbar [animated]="true" [striped]="true" [value]="95" type="primary"></ngb-progressbar>
+    </p>
+    <div class="modal-footer">
+      <button (click)="closeModal()" class="btn btn-secondary" type="button">Close</button>
+      <button type="submit" [disabled]="!form.valid || isLoading" class="btn btn-primary">
+        {{ formData ? 'Edit agent' : 'Add agent' }}
+      </button>
+    </div>
+  </form>
 </div>

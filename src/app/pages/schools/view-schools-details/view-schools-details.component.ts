@@ -7,6 +7,7 @@ import { Subscription } from "rxjs";
 import { HttpServService } from "src/app/shared/services/http-serv.service";
 import { ToastrService } from "ngx-toastr";
 import { PartnerActionDialogComponent } from "src/app/shared/components/partner-action-dialog/partner-action-dialog.component";
+import { ApiService } from "src/app/api.service";
 
 @Component({
   selector: "app-view-schools-details",
@@ -45,6 +46,7 @@ export class ViewSchoolsDetailsComponent implements OnInit, OnDestroy {
   public modalRef!: NgbModalRef;
   public schoolId!: number;
   public menuCodeId!: number;
+  
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -52,7 +54,10 @@ export class ViewSchoolsDetailsComponent implements OnInit, OnDestroy {
     public router: Router,
     public httpService: HttpServService,
     private modalService: NgbModal,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public apiService: ApiService
+
+    
   ) {}
 
   columns = [
@@ -78,88 +83,59 @@ export class ViewSchoolsDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  getMenuStatus(menuCodeId: number) {
-    let model = {
-      schoolId: this.schoolId,
-      menuCodeId: menuCodeId,
-    };
-    console.log(menuCodeId);
 
-        return this.httpService
-      .postReq("portal/api/v1/menu-codes/statuses/getall", model)
+  getSchoolDetails(): void {
+    this.loading = true;
+    this.apiService.getSchoolById(this.schoolId)
       .subscribe(
-        (res: any) => {
-          if (res.status === 0) {
-            console.log(res);
-            this.loading = false;
-            this.menuDetails = res.data;
-            console.log(this.menuDetails,'Testing');
-            
+        (response: any) => {
+          this.loading = false;
+          if (response.statusCode === 200) {
+            this.schoolDetails = response.result;
+            console.log("Fetched school details:", this.schoolDetails);  // Debugging
+            // this.getMenuStatus(this.schoolDetails?.menuCodeId);
           } else {
-            this.loading = false;
+            this.toastr.error('Failed to fetch school details:', response.message);
           }
         },
         (error: any) => {
           this.loading = false;
+          this.toastr.error('Error fetching school details:', error.message);
         }
       );
   }
-
-
-
-  getStatus(name: string, ): any {
-    let menuStatus = this.menuDetails.find((item: any) => {
-      return item?.menuCode == name
-    });
-    return menuStatus?.status || "UNKNOWN" 
-  }
-
-  getPercentage(name: string, ): any {
-    let menuStatus = this.menuDetails.find((item: any) => {
-      return item?.menuCode == name
-    });
-    return menuStatus?.completionPercentage 
-  }
-
-
-  getSchoolDetails() {
-    return this.httpService
-      .getReq(`portal/api/v1/schools/view/${this.schoolId}`)
-      .subscribe(
-        (res: any) => {
-          if (res.status === 0) {
-            this.loading = false;
-            this.schoolDetails = res.data;
-            this.getMenuStatus(this.schoolDetails?.menuCodeId);
-
-          } else {
-            this.loading = false;
-          }
-        },
-        (error: any) => {
-          this.loading = false;
-        }
-      );
-  }
-
   ngOnDestroy(): void {
     this.subs.forEach((sub) => sub.unsubscribe());
   }
-
-  getMenuOutline() {
-    this.loading = true;
-    const model = null;
-    this.httpService
-      .postReq("portal/api/v1/documents/menu-codes/getall", model)
-      .subscribe((response: any) => {
-        if (response.status == 0) {
-          this.menuOutline = response.data.sort(
-            (a: any, b: any) => a.id - b.id);
+  getMenuOutline(): void {
+    this.apiService.getMenuOutline().subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && Array.isArray(response.result)) {
+          this.menuOutline = response.result;
+          console.log(" ....fetched menuOutline", response.result);
+        } else {
+          console.error('Failed to fetch menuOutline:', response);
         }
-        console.log(this.menuOutline, 'MenuOutline');
-        
-      });
+      },
+      (error) => {
+        console.error('Error fetching menuOutline:', error);
+      }
+    );
   }
+  // getMenuOutline() {
+  //   this.loading = true;
+  //   const model = null;
+  //   this.httpService
+  //     .postReq("portal/api/v1/documents/menu-codes/getall", model)
+  //     .subscribe((response: any) => {
+  //       if (response.status == 0) {
+  //         this.menuOutline = response.data.sort(
+  //           (a: any, b: any) => a.id - b.id);
+  //       }
+  //       console.log(this.menuOutline, 'MenuOutline');
+        
+  //     });
+  // }
   approveSchool(row: any) {
     this.modalRef = this.modalService.open(PartnerActionDialogComponent, {
       centered: true,
@@ -183,7 +159,7 @@ export class ViewSchoolsDetailsComponent implements OnInit, OnDestroy {
                 if (resp["status"] === 0) {
                   this.toastr.success(resp?.message, "Success");
                   this.getSchoolDetails();
-                  this.getMenuStatus(this.schoolDetails?.menuCodeId);
+                  // this.getMenuStatus(this.schoolDetails?.menuCodeId);
                 } else {
                   this.toastr.error(resp?.message, "Error");
                 }
@@ -224,7 +200,7 @@ export class ViewSchoolsDetailsComponent implements OnInit, OnDestroy {
                 if (resp["status"] === 0) {
                   this.toastr.success(resp?.message, "Success");
                   this.getSchoolDetails();
-                  this.getMenuStatus(this.schoolDetails?.menuCodeId);
+                  // this.getMenuStatus(this.schoolDetails?.menuCodeId);
                 } else {
                   this.toastr.error(resp?.message, "Error");
                 }
@@ -256,8 +232,8 @@ export class ViewSchoolsDetailsComponent implements OnInit, OnDestroy {
 
       default:
         return "#ffffff";
-    }
-  }
+    }
+  }
 
 
 }

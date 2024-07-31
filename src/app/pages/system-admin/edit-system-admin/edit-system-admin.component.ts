@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { ApiService } from '../../../api.service'; // Adjust path based on your project structure
+import { ApiService } from '../../../api.service';
 
 @Component({
   selector: 'app-edit-system-admin',
@@ -14,7 +14,7 @@ export class EditSystemAdminComponent implements OnInit {
   form!: FormGroup;
   title!: string;
   isLoading: boolean = false;
-
+  
   constructor(
     public activeModal: NgbActiveModal,
     private fb: FormBuilder,
@@ -23,6 +23,10 @@ export class EditSystemAdminComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.initializeForm();
+  }
+
+  initializeForm(): void {
     this.form = this.fb.group({
       firstName: ['', Validators.required],
       middleName: [''],
@@ -37,6 +41,7 @@ export class EditSystemAdminComponent implements OnInit {
 
     if (this.formData) {
       this.form.patchValue(this.formData);
+      this.form.get('email')?.disable();
       this.title = 'Edit Admin';
     } else {
       this.title = 'Add Admin';
@@ -50,21 +55,33 @@ export class EditSystemAdminComponent implements OnInit {
   submitData() {
     if (this.form.valid) {
       this.isLoading = true;
-      const adminId = this.formData.adminId; // Assuming adminId is part of formData
-      const updatedAdminData = this.form.value;
+      const adminData = this.form.getRawValue(); // This includes disabled fields
 
-      this.apiService.updateSystemAdmin(adminId, updatedAdminData).subscribe(
-        (response) => {
-          this.isLoading = false;
-          this.toastr.success('Admin updated successfully', 'Success');
-          this.activeModal.close({ status: 'success', data: response });
-        },
-        (error) => {
-          this.isLoading = false;
-          console.error('Error updating admin:', error);
-          this.toastr.error('Failed to update admin', 'Error');
-        }
-      );
+      if (this.formData) {
+        // Update existing admin
+        this.apiService.updateSystemAdmin(this.formData.adminId, adminData).subscribe(
+          (response) => this.handleSuccess(response, 'Admin updated successfully'),
+          (error) => this.handleError(error, 'Failed to update admin')
+        );
+      } else {
+        // Add new admin
+        this.apiService.addSystemAdmins(adminData).subscribe(
+          (response) => this.handleSuccess(response, 'Admin added successfully'),
+          (error) => this.handleError(error, 'Failed to add admin')
+        );
+      }
     }
+  }
+
+  private handleSuccess(response: any, message: string): void {
+    this.isLoading = false;
+    this.toastr.success(message, 'Success');
+    this.activeModal.close({ status: 'success', data: response });
+  }
+
+  private handleError(error: any, message: string): void {
+    this.isLoading = false;
+    console.error('Error:', error);
+    this.toastr.error(message, 'Error');
   }
 }

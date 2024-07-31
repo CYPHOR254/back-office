@@ -42,9 +42,9 @@ export class AddSystemAdminComponent implements OnInit {
 
     if (this.formData) {
       this.form.patchValue(this.formData);
-      this.title = 'Edit Agent';
+      this.title = 'Edit System Admin';
     } else {
-      this.title = 'Add Agent';
+      this.title = 'Add System Admin';
     }
   }
 

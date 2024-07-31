@@ -19,7 +19,7 @@
       </div>
       <div class="col-6">
         <label class="form-label" for="email">Email</label>
-        <input class="form-control" formControlName="email" id="email" name="email" type="email" autocomplete="false" />
+        <input class="form-control" formControlName="email" id="email" name="email" type="email" autocomplete="false"  />
       </div>
       <div class="col-6">
         <label class="form-label" for="nationalId">National id</label>
@@ -49,7 +49,7 @@
     <div class="modal-footer">
       <button (click)="closeModal()" class="btn btn-secondary" type="button">Close</button>
       <button type="submit" [disabled]="!form.valid || isLoading" class="btn btn-primary">
-        {{ formData ? 'Edit Agent' : 'Add Agent' }}
+        {{ formData ? 'Update Admin' : 'Add Admin' }}
       </button>
     </div>
 </div>

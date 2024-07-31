@@ -1,106 +1,93 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { Subscription } from "rxjs";
-import { ToastrService } from "ngx-toastr";
-import { HttpServService } from "src/app/shared/services/http-serv.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { ApiService } from '../../../api.service'; // Adjust path based on your project structure
 
 @Component({
-  selector: "app-add-partner",
-  templateUrl: "./add-partner.component.html",
-  styleUrls: ["./add-partner.component.scss"],
+  selector: 'app-add-partner',
+  templateUrl: './add-partner.component.html',
+  styleUrls: ['./add-partner.component.scss']
 })
 export class AddPartnerComponent implements OnInit {
-  @Input() title: any;
   @Input() formData: any;
-
-  isLoading!: boolean;
-
-  public loading = false;
-  public hasErrors = false;
-  public errorMessages: any;
-  public form!: FormGroup;
-  public addPartner$!: Subscription;
+  form!: FormGroup;
+  title!: string;
+  isLoading: boolean = false;
+  resources: any[] = []; // Change the type to match your actual resource structure
 
   constructor(
     public activeModal: NgbActiveModal,
-    public fb: FormBuilder,
-    public toastr: ToastrService,
-    private _httpService: HttpServService
-  ) {}
+    private fb: FormBuilder,
+    private toastr: ToastrService,
+    private apiService: ApiService
+  ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.getResources();
     this.form = this.fb.group({
-      firstName: [
-        this.formData ? this.formData.firstName : "",
-        [Validators.required],
-      ],
-      lastName: [
-        this.formData ? this.formData.lastName : "",
-        [Validators.required],
-      ],
-      middleName: [
-        this.formData ? this.formData.middleName : "",
-        [Validators.required],
-      ],
-      email: [this.formData ? this.formData.email : "", [Validators.required]],
-      phoneNumber: [
-        this.formData ? this.formData.phoneNumber : "",
-        [Validators.required],
-      ],
-      idNumber: [
-        this.formData ? this.formData.idNumber : "",
-        [Validators.required],
-      ],
+      firstName: ['', Validators.required],
+      middleName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      nationalId: [0, [Validators.required, Validators.min(0)]],
+      phoneNo: ['', Validators.required],
+      firmName: ['', Validators.required],
+      emergencyContact: ['', Validators.required],
+      businessContact: ['', Validators.required],
+      businessEmail: ['', [Validators.required, Validators.email]],
+      agreementStartDate: ['', Validators.required],
+      agreementEndDate: ['', Validators.required],
+      resource: ['', Validators.required],
+      profileId: [4]
     });
-  }
 
-  public submitData(): void {
-    this.loading = true;
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      this.loading = false;
-      return;
+    if (this.formData) {
+      this.form.patchValue(this.formData);
+      this.title = 'Edit Partner';
+    } else {
+      this.title = 'Add Partner';
     }
-    this.createRecord();
   }
 
-  public closeModal(): void {
-    this.activeModal.dismiss("Cross click");
+  getResources(): void {
+    this.apiService.getResources().subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && Array.isArray(response.result)) {
+          this.resources = response.result;
+          console.log("Fetched resources", response.result);
+        } else {
+          console.error('Failed to fetch resources', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching resources', error);
+      }
+    );
   }
 
-  private createRecord(): any {
-    this.isLoading = true;
-    const model = {
-      firstName: this.form.value.firstName,
-      middleName: this.form.value.middleName,
-      lastName: this.form.value.lastName,
-      email: this.form.value.email,
-      phoneNumber: this.form.value.phoneNumber,
-      idNumber: this.form.value.idNumber,
-      channel: "PORTAL",
-    };
+  closeModal() {
+    this.activeModal.dismiss('Cross click');
+  }
 
-    this.addPartner$ = this._httpService
-      .postReq("portal/api/v1/partners/save", model)
-      .subscribe(
-        (result: any) => {
+  submitData() {
+    if (this.form.valid) {
+      this.isLoading = true;
+      const formData = this.form.value;
+
+      this.apiService.addPartner(formData).subscribe(
+        (response) => {
           this.isLoading = false;
-          if (result.status === 0) {
-            this.activeModal.close("success");
-            this.toastr.success(result?.message, "Success");
-          } else {
-            this.hasErrors = true;
-            this.errorMessages = result?.message;
-            this.toastr.error(result?.message, "Error");
-          }
+          this.activeModal.close({ status: 'success', data: response });
+          this.toastr.success('Partner added successfully.', 'Success');
+          
         },
         (error) => {
           this.isLoading = false;
-          this.hasErrors = true;
-          this.errorMessages = error?.message;
-          this.toastr.error(error?.message, "Error");
+          console.error('Error adding partner:', error);
+          this.toastr.error('Failed to add partner.', 'Error');
         }
       );
+    }
   }
 }

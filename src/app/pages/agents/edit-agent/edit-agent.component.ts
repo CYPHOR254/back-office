@@ -1,99 +1,75 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { ToastrService } from "ngx-toastr";
-import { HttpServService } from "../../../shared/services/http-serv.service";
-import { Subscription } from "rxjs";
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { ApiService } from '../../../api.service'; // Adjust path based on your project structure
 
 @Component({
-  selector: "app-edit-agent",
-  templateUrl: "./edit-agent.component.html",
-  styleUrls: ["./edit-agent.component.scss"],
+  selector: 'app-edit-agent',
+  templateUrl: './edit-agent.component.html',
+  styleUrls: ['./edit-agent.component.scss']
 })
 export class EditAgentComponent implements OnInit {
-  @Input() title: any;
-  @Input() formData: any;
-  public loading = false;
-  public hasErrors = false;
-  public errorMessages: any;
-  public form!: FormGroup;
-  public imageFile?: File;
-
-  isLoading?: boolean;
-  subs: Subscription[] = [];
-  profileId: any;
+  @Input() formData: any; // Data to populate the form for editing
+  form!: FormGroup; // Form group instance
+  title: string = ''; // Title for the modal
+  isLoading: boolean = false; // Flag to indicate loading state
 
   constructor(
-    public activeModal: NgbActiveModal,
-    public fb: FormBuilder,
-    public toastr: ToastrService,
-    public httpService: HttpServService
-  ) {}
+    public activeModal: NgbActiveModal, // Modal control
+    private fb: FormBuilder, // FormBuilder for creating forms
+    private apiService: ApiService, // API service for backend communication
+    private toastr: ToastrService // Toastr for notifications
+  ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    // Initialize the form with validation
     this.form = this.fb.group({
-      firstName: [
-        this.formData ? this.formData.firstName : "",
-        [Validators.required],
-      ],
-      lastName: [
-        this.formData ? this.formData.lastName : "",
-        [Validators.required],
-      ],
-      middleName: [
-        this.formData ? this.formData.middleName : "",
-        [Validators.required],
-      ],
-      email: [this.formData ? this.formData.email : "", [Validators.required]],
-      phoneNumber: [
-        this.formData ? this.formData.phoneNumber : "",
-        [Validators.required],
-      ],
-      idNumber: [
-        this.formData ? this.formData.idNumber : "",
-        [Validators.required],
-      ],
+      firstName: ['', Validators.required],
+      middleName: [''],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      nationalId: [0, [Validators.required, Validators.min(0)]],
+      phoneNo: ['', Validators.required],
+      agencyName: ['', Validators.required],
+      EmergencyContact: ['', Validators.required]
     });
-    console.log(this.formData);
+
+    // Set the title and populate the form if editing
+    if (this.formData) {
+      this.form.patchValue(this.formData);
+      this.title = 'Edit Agent';
+    } else {
+      this.title = 'Add Agent';
+    }
   }
 
-  public submitData(): void {
-    this.editAgent();
-    this.loading = true;
+  closeModal() {
+    this.activeModal.dismiss('Cross click'); // Dismiss the modal
   }
 
-  public closeModal(): void {
-    this.activeModal.dismiss("Cross click");
-  }
-
-  private editAgent(): any {
-    console.log("this.form");
-    console.log(this.form);
-
-    this.isLoading = true;
-    const model = {
-      id: this.formData.id,
-      firstName: this.form.value.firstName,
-      middleName: this.form.value.middleName,
-      lastName: this.form.value.lastName,
-      email: this.form.value.email,
-      phoneNumber: this.form.value.phoneNumber,
-      idNumber: this.form.value.idNumber,
-      channel: "APP",
-    };
-
-    this.httpService
-      .postReq("portal/api/v1/agents/update", model)
-      .subscribe((result: any) => {
-        if (result.status === 0) {
+  submitData() {
+    if (this.form.valid) {
+      this.isLoading = true;
+  
+      const agentId = this.formData?.agentId; // Assuming agentId is part of formData
+      const updatedAgentData = this.form.value;
+  
+      // Call the API to update or add the agent
+      this.apiService.updateAgent(agentId, updatedAgentData).subscribe(
+        (response) => {
+          console.log('API response:', response); // Log the response
           this.isLoading = false;
-          this.activeModal.close("success");
-          this.toastr.success(result?.message, "Success");
-          console.log(result);
-        } else {
-          this.activeModal.close("error");
-          this.toastr.error(result?.message, "Error");
+          this.toastr.success('Agent updated successfully', 'Success');
+          this.activeModal.close({ status: 'success', data: response });
+        },
+        (error) => {
+          this.isLoading = false;
+          console.error('Error updating agent:', error);
+          this.toastr.error('Failed to update agent', 'Error');
         }
-      });
+      );
+    }
   }
+
 }

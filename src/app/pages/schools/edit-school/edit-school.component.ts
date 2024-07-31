@@ -1,12 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Curriculum, SchoolType } from 'src/app/api.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { ApiService, Category, Curriculum, SchoolType } from 'src/app/api.service';
+
 @Component({
   selector: 'app-edit-school',
   templateUrl: './edit-school.component.html',
   styleUrls: ['./edit-school.component.scss']
 })
-export class EditSchoolComponent {
+export class EditSchoolComponent implements OnInit {
+  @Input() schoolData: any; // Add this if you expect `schoolData` to be an input
   editSchoolForm!: FormGroup;
   countiesData: any[] = [
     {
@@ -645,16 +649,22 @@ export class EditSchoolComponent {
         "West Pokot"
       ]
     }
-  ];  
+  ];
+  isLoading = false; // Add this to the class properties
   selectedEditCounty: any;
   curriculums: Curriculum[] = [];
   schoolTypes: SchoolType[] = [];
+  schoolGenders: any[] = [];
+  schoolCategories: Category [] = []; // Change the type to Category[]
   logoPreviewUrl: string | ArrayBuffer | null = null;
-  selectedSchool: any | null = null;
+  isSubmitting: boolean = false;
+  logoFile :File|null= null
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private apiService: ApiService, private toastr: ToastrService, public activeModal: NgbActiveModal) { }
+
 
   ngOnInit(): void {
+    console.log('School data received:', this.schoolData);
     this.editSchoolForm = this.fb.group({
       schoolName: ['', Validators.required],
       emailAddress: ['', [Validators.required, Validators.email]],
@@ -662,13 +672,90 @@ export class EditSchoolComponent {
       postalAddress: ['', Validators.required],
       postalCode: ['', Validators.required],
       county: ['', Validators.required],
-      subcounty: [{ value: '', disabled: true }, Validators.required],
+      subcounty: [ '', Validators.required],
       curriculumId: ['', Validators.required],
-      schoolCategoryId: ['', Validators.required],
+      categoryId: ['', Validators.required],
       moeRegistrationNo: ['', Validators.required],
-      logoUpload: [null, Validators.required]
+      schoolType: ['', Validators.required],
+      schoolGender: ['', Validators.required],
+      logoUpload: [null, Validators.required],
     });
+    this.getCurriculums();
+    this.getSchoolTypes();
+    this.getSchoolGenders();
+    this.getCategories();
+    this.populateForm(); // Add this line
+
+
   }
+
+  populateForm(): void {
+    console.log('Populating form with:', this.schoolData);
+    if (this.schoolData) {
+      this.editSchoolForm.patchValue({
+        schoolName: this.schoolData.schoolName,
+        emailAddress: this.schoolData.emailAddress,
+        mobileNo: this.schoolData.mobileNo,
+        postalAddress: this.schoolData.postalAddress,
+        postalCode: this.schoolData.postalCode,
+        county: this.schoolData.county,
+        subcounty: this.schoolData.subcounty,
+        curriculumId: this.schoolData.curriculumId,
+        categoryId: this.schoolData.categoryId,
+        moeRegistrationNo: this.schoolData.moeRegistrationNo,
+        schoolType: this.schoolData.schoolTypeId,
+        schoolGender: this.schoolData.schoolGenderId,
+        longitude: this.schoolData.longitude,
+        latitude: this.schoolData.latitude,
+        logoUpload: this.schoolData.logoPreviewUrl,
+
+
+      });
+  
+      // Enable subcounty field if county is selected
+      if (this.schoolData.county) {
+        this.editSchoolForm.get('subcounty')?.enable();
+        this.onEditCountyChange();
+      }
+  
+      // Set logo preview if available
+      if (this.schoolData.logoUrl) {
+        this.logoPreviewUrl = this.schoolData.logoUrl;
+      }
+    }
+  }
+  getCategories(): void {
+    this.apiService.getCategories().subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && Array.isArray(response.result)) {
+          this.schoolCategories = response.result; // Assign to schoolCategories
+          console.log(" ....fetched school category", response.result);
+        } else {
+          console.error('Failed to fetch school category', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching school category', error);
+      }
+    );
+  }
+  getCurriculums(): void {
+    this.apiService.getCurriculums().subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && Array.isArray(response.result)) {
+          this.curriculums = response.result;
+          console.log(" ....fetched curriculum", response.result);
+
+        } else {
+          console.error('Failed to fetch curriculums:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching curriculums:', error);
+      }
+    );
+  }
+
 
   onEditCountyChange(): void {
     const selectedCounty = this.countiesData.find(county => county.name === this.editSchoolForm.value.county);
@@ -679,7 +766,37 @@ export class EditSchoolComponent {
       this.editSchoolForm.controls['subcounty'].disable();
     }
   }
+  getSchoolTypes(): void {
+    this.apiService.getSchoolTypes().subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && Array.isArray(response.result)) {
+          this.schoolTypes = response.result;
+          console.log(" ....fetched SchoolTypes", response.result);
 
+        } else {
+          console.error('Failed to fetch school types:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching school types:', error);
+      }
+    );
+  }
+  getSchoolGenders(): void {
+    this.apiService.getSchoolGenders().subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && Array.isArray(response.result)) {
+          this.schoolGenders = response.result;
+          console.log("Fetched School Genders:", this.schoolGenders);
+        } else {
+          console.error('Failed to fetch school genders:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching school genders:', error);
+      }
+    );
+  }
   handleLogoUpload(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -692,10 +809,32 @@ export class EditSchoolComponent {
     }
   }
 
-  onSubmitAdd(): void {
+  onSubmit(): void {
     if (this.editSchoolForm.valid) {
-      // Handle form submission logic
-      console.log(this.editSchoolForm.value);
+      this.isLoading = true;
+      const schoolId = this.schoolData.schoolId; // Assuming `schoolId` is part of `schoolData`
+      const updatedSchoolData = this.editSchoolForm.value;
+
+      this.apiService.updateSchool(schoolId, updatedSchoolData).subscribe(
+        (response) => {
+          this.isLoading = false;
+          if (response.statusCode === 200) {
+            this.toastr.success('School updated successfully', 'Success');
+            this.activeModal.close({ status: 'success', data: response });
+          } else {
+            this.toastr.error('Failed to update school', 'Error');
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          console.error('Error updating school:', error);
+          this.toastr.error('Failed to update school', 'Error');
+        }
+      );
     }
+  }
+
+  closeModal(): void {
+    this.activeModal.dismiss('Cross click');
   }
 }

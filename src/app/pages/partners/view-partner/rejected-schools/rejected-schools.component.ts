@@ -1,10 +1,13 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
-import { map, Observable, of, Subscription } from "rxjs";
+import { catchError, map, Observable, of, Subscription } from "rxjs";
 import { ToastrService } from "ngx-toastr";
 import { HttpServService } from "src/app/shared/services/http-serv.service";
-import { FormControl } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { ApiService } from "src/app/api.service";
+import { ColumnMode } from "@swimlane/ngx-datatable";
 
 @Component({
   selector: "app-rejected-schools",
@@ -13,162 +16,103 @@ import { FormControl } from "@angular/forms";
 })
 export class RejectedSchoolsComponent implements OnInit {
   @Input() formData: any;
-  @Input() partnerId:number|undefined
+  @Input() agentId: any | undefined;
+  @Input() partnerId: any | undefined;
 
-  loading: boolean = true;
+  breadCrumbItems!: Array<{}>;
   rows: any = [];
+  loading = true;
+  reorderable = true;
+  title: string = "Schools by School";
+  actions = ["View School"];
   filteredRows: any = [];
-  defaultNavActiveId = 1;
-  title: string = "Pending Schools";
-  actions = ["View"];
   totalRecords: number = 0;
-  subs: Subscription[] = [];
-  schoolList: any[] = [];
-  channelOptions: any[] = [];
   viewedSchool: any;
-  schoolList$: Observable<any> = of([]);
-  allRecords: any;
-  pageSizeControl = new FormControl(50); 
-  pageSizeOptions = [
+  ColumnMode = ColumnMode;
+  subs: Subscription[] = [];
+  total: any;
 
-
-    { value: 50, name: '50 items' },
-    { value: 100, name: '100 items' },
-    { value: 200, name: '200 items' },
-    { value: 300, name: '300 items' },
-    { value: 400, name: '400 items' },
-    { value: 500, name: '500 items' },
-    { value: 1000, name: '1000 items' },
-    { value: 2500, name: '2500 items' },
-    { value: 5000, name: '5000 items' },
-    { value: 7500, name: '7500 items' },
-    { value: 10000, name: '10000 items' },
-    { value: 20000, name: '20000 items' },
-
-    // { value: '', name: 'All items' }
-  ];
+  public form!: FormGroup;
+  public currentUser: any;
+  public imageFile!: File;
   public modalRef!: NgbModalRef;
+  public SchoolDetails: any;
 
   constructor(
     private httpService: HttpServService,
-    private toastr: ToastrService
+    public activatedRoute: ActivatedRoute,
+    public fb: FormBuilder,
+    public router: Router,
+    private toastr: ToastrService,
+    private apiService: ApiService
   ) {}
 
   columns = [
-    { name: "Name", prop: "name" },
-    { name: "Category", prop: "category" },
+    // { name: "School ID", prop: "schoolId" },
+    { name: "School Name", prop: "schoolName" },
+    { name: "School Gender", prop: "schoolGender" },
     { name: "Curriculum", prop: "curriculum" },
+    { name: "Resource", prop: "resource" },
+    { name: "School Type", prop: "schoolType" },
+    { name: "Category", prop: "category" },
+    { name: "Email Address", prop: "emailAddress" },
+    { name: "Mobile No", prop: "mobileNo" },
+    // { name: "Postal Address", prop: "postalAddress" },
+    // { name: "Postal Code", prop: "postalCode" },
+    { name: "MOE Registration No", prop: "moeRegistrationNo" },
     { name: "County", prop: "county" },
+    { name: "SubCounty", prop: "subCounty" },
+    // { name: "Logo", prop: "logo" },
+    // { name: "Longitude", prop: "longitude" },
+    // { name: "Latitude", prop: "latitude" },
     { name: "Status", prop: "status" },
-    { name: "Created On", prop: "createdOn" },
+    // { name: "School Admin Email", prop: "schoolAdminEmail" }
   ];
+  
 
-  ngOnDestroy(): void {
-    this.subs.forEach((sb) => sb.unsubscribe());
-  }
+  allColumns = [...this.columns];
+
+  schoolList$: Observable<any> = of([]);
 
   ngOnInit(): void {
-    this. pageSizeControl.valueChanges?.subscribe((val:any)=>{
-      console.log(val);
-      
-       if(val){this.getIndividualData();
-         
-   
-       }});
-       this.getIndividualData()  }
+    this.activatedRoute.params.subscribe((params) => {
+      if (typeof params["id"] !== "undefined") {
+        this.agentId = params["id"];
+      }
+    });
 
-  getIndividualData(): void {
+    this.fetchSchools();
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
+  }
+  fetchSchools() {
     this.loading = true;
-
-    const model = {
-      page: 0,
-      size:this.pageSizeControl.value,
-      status: ["REJECTED"],
-      id: "",
-      name: "",
-      type: "",
-      category: "",
-      schoolGender: "",
-      curriculum: "",
-      postalCode: "",
-      postalAddress: "",
-      moeRegistrationNumber: "",
-      idNumber: "",
-      mobileNumber: "",
-      emailAddress: "",
-      domain: "",
-      subCounty: "",
-      county: "",
-      diocese: "",
-      from: "",
-      to: "",
-    };
-
-    this.schoolList$ = this.httpService
-      .postReq("portal/api/v1/schools/getall", model)
-      .pipe(
-        map((resp: any) => {
-          if (resp["status"] === 0) {
-            let response = resp["data"];
-
-            this.allRecords = response;
-
-            this.rows = response.map((item: any, index: any) => {
-              const myDate = item["createdOn"].split(" ")[0];
-              let dateObj = new Date(myDate).toString().split("GMT")[0];
-              dateObj = dateObj.replace(" 03:00:00", "");
-
-              const res = {
-                ...item,
-                frontendId: index + 1,
-                createdOn: dateObj,
-              };
-
-              return res;
-            });
-
-            // this.rows = this.rows.filter((row: any) => row.status === "REJECTED");
-
-            this.totalRecords = this.rows.length;
-
-            this.loading = false;
-            return this.rows;
-          } else {
-            this.toastr.error("Unable to fetch schools", "Error");
-            this.loading = false;
-            return of([]);
-          }
-        })
-      );
-  }
-
-  updateColumns(updatedColumns: any) {
-    this.columns = [...updatedColumns];
-  }
-
-  updateFilteredRowsEvent(data: string) {
-    this.filteredRows = data;
-  }
-
-  searchResultUniversal(event: any) {
-    const filteredData = this.allRecords?.filter((item: any) => {
-      return Object.values(item)?.some((value: any) => {
-        let str = value + "";
-        return str?.toLowerCase()?.includes(event?.toLowerCase());
-      });
+    this.apiService.getRejected().pipe(
+      catchError(error => {
+        this.toastr.error('Failed to fetch agent admins', 'Error');
+        this.loading = false;
+        return of([]);
+      })
+    ).subscribe((response: any) => {
+      if (response.statusCode === 200) {
+        this.rows = response.result;
+        this.filteredRows = this.rows;
+        this.totalRecords = this.rows.length;
+        this.toastr.success('Fetched schools added by  agent  successfully', 'Success');
+      } else {
+        this.toastr.error('Failed to fetch agent admins', 'Error');
+      }
+      this.loading = false;
     });
-
-    this.schoolList$ = of(filteredData);
   }
+  triggerEvent(data: string) { 
+    let eventData = JSON.parse(data);
+    this.viewedSchool = eventData["row"]["id"];
 
-  searchResultByDate(event: any) {
-    const filteredData = this.allRecords.filter((item: any) => {
-      const createdOnDate = new Date(item.createdOn);
-      return (
-        createdOnDate >= event?.startDate && createdOnDate <= event?.endDate
-      );
-    });
-
-    this.schoolList$ = of(filteredData);
+    if (eventData.action == "View") {
+      this.router.navigate([`/schools/view-School/${this.viewedSchool}`]);
+    }
   }
 }

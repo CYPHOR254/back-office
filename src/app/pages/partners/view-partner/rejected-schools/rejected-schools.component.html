@@ -1,40 +1,35 @@
+<div class="pagetitle"></div>
 <section class="section">
-    <div class="d-flex justify-content-end mb-2">
-      <app-custom-tbl-header
-        [rows]="schoolList$ | async"
-        [title]="'Schools'"
-        (searchResultsEvent)="searchResultUniversal($event)"
-        (filterDateEvent)="searchResultByDate($event)"
-      ></app-custom-tbl-header>
-    </div>
-  
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card p-1">
-          <div class="table-responsive" *ngIf="!loading">
-            <select [formControl]="pageSizeControl" class="form-select ms-2 w-auto" aria-label="Default select example">
-              <option *ngFor="let option of pageSizeOptions" [value]="option.value">{{ option.name }}</option>
-            </select>
-            <app-custom-tbl
-              [columns]="columns"
-              [rows]="schoolList$ | async"
-              [rows]="rows"
-              [loadingIndicator]="false"
-              [totalItems]="totalRecords"
-              [actions]="actions"
-              (updateFilteredRows)="updateFilteredRowsEvent($event)"
-            ></app-custom-tbl>
-          </div>
-          <div class="mx-auto text-center" *ngIf="loading">
-            <div class="lds-ellipsis">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
+  <div class="d-flex justify-content-end">
+    <app-custom-tbl-header
+      [allColumns]="allColumns"
+      [rows]="filteredRows.length > 0 ? filteredRows : rows"
+      [title]="title"
+    ></app-custom-tbl-header>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card p-1">
+        <ng-container *ngIf="schoolList$ | async"></ng-container>
+        <ng-container *ngIf="rows"></ng-container>
+        <div class="table-responsive" *ngIf="!loading">
+          <app-custom-tbl
+            [columns]="columns"
+            [rows]="rows"
+            [actions]="actions"
+            [loadingIndicator]="false"
+            [totalItems]="totalRecords"
+          ></app-custom-tbl>
+        </div>
+        <div class="mx-auto text-center" *ngIf="loading">
+          <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
         </div>
       </div>
     </div>
-  </section>
-  
+  </div>
+</section>

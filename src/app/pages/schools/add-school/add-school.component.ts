@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { ApiService, Curriculum, SchoolType, Category } from 'src/app/api.service';
+import { Profile } from '../../rbac/models/profile';
 
 @Component({
   selector: 'app-add-school',
@@ -651,34 +653,77 @@ export class AddSchoolComponent implements OnInit {
   curriculums: Curriculum[] = [];
   schoolTypes: SchoolType[] = [];
   schoolGenders: any[] = [];
-  schoolCategories: Category [] = []; // Change the type to Category[]
+  schoolCategories: Category[] = []; // Change the type to Category[]
   logoPreviewUrl: string | ArrayBuffer | null = null;
+  isSubmitting: boolean = false;
+  logoFile: File | null = null
+  resources: any[] = []; // Change the type to match your actual resource structure
 
-  constructor(private fb: FormBuilder, private apiService: ApiService
+  constructor(private fb: FormBuilder, private apiService: ApiService, private toastService: ToastrService // Toastr for notifications
+
+
   ) { }  // Inject the service
+
 
   ngOnInit(): void {
     this.addSchoolForm = this.fb.group({
       schoolName: ['', Validators.required],
       emailAddress: ['', [Validators.required, Validators.email]],
       mobileNo: ['', Validators.required],
-      postalAddress: ['', Validators.required],
-      postalCode: ['', Validators.required],
+      postalAddress: [''],
+      postalCode: [''],
       county: ['', Validators.required],
-      subcounty: [{ value: '', disabled: true }, Validators.required],
+      subCounty: [{ value: '', disabled: true }, Validators.required],
       curriculumId: ['', Validators.required],
-      schoolCategoryId: ['', Validators.required],
+      categoryId: ['', Validators.required],
       moeRegistrationNo: ['', Validators.required],
-      schoolType: ['', Validators.required],
-      schoolGender: ['', Validators.required],
-      logoUpload: [null, Validators.required]
+      schoolTypeId: ['', Validators.required],
+      schoolGenderId: ['', Validators.required],
+      resourceId: ['', Validators.required],
+      schoolAdminEmail: ['', [Validators.required, Validators.email]],
+      longitude: [''],
+      latitude: [''],
+      logoUpload: [null],
     });
     this.getCurriculums();
     this.getSchoolTypes();
     this.getSchoolGenders();
     this.getCategories();
+    this.getResources();
 
 
+
+  }
+  // getResources(): void {
+  //   this.apiService.getResources().subscribe(
+  //     (response: any) => {
+  //       if (response.statusCode === 200 && Array.isArray(response.result)) {
+  //         this.resources = response.result;
+  //         console.log("Fetched resources", response.result);
+  //       } else {
+  //         console.error('Failed to fetch resources', response);
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching resources', error);
+  //     }
+  //   );
+  // }
+
+  getResources(): void {
+    this.apiService.getResources().subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && Array.isArray(response.result)) {
+          this.resources = response.result;
+          console.log("Fetched resources", response.result);
+        } else {
+          console.error('Failed to fetch resources', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching resources', error);
+      }
+    );
   }
 
   getCategories(): void {
@@ -718,9 +763,9 @@ export class AddSchoolComponent implements OnInit {
     const selectedCounty = this.countiesData.find(county => county.name === this.addSchoolForm.value.county);
     this.selectedEditCounty = selectedCounty;
     if (selectedCounty) {
-      this.addSchoolForm.controls['subcounty'].enable();
+      this.addSchoolForm.controls['subCounty'].enable();
     } else {
-      this.addSchoolForm.controls['subcounty'].disable();
+      this.addSchoolForm.controls['subCounty'].disable();
     }
   }
   getSchoolTypes(): void {
@@ -739,6 +784,7 @@ export class AddSchoolComponent implements OnInit {
       }
     );
   }
+
   getSchoolGenders(): void {
     this.apiService.getSchoolGenders().subscribe(
       (response: any) => {
@@ -754,33 +800,76 @@ export class AddSchoolComponent implements OnInit {
       }
     );
   }
+
+
+
   handleLogoUpload(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.logoPreviewUrl = e.target.result;
-      };
-      reader.readAsDataURL(file);
-      this.addSchoolForm.patchValue({ logoUpload: file });
-    }
+    this.logoFile = event.target.files[0]
   }
 
   onSubmitAdd(): void {
-    if (this.addSchoolForm.valid) {
-      const formData = new FormData();
-      Object.keys(this.addSchoolForm.controls).forEach(key => {
-        formData.append(key, this.addSchoolForm.get(key)?.value);
-      });
-
-      this.apiService.addSchool(formData).subscribe(
-        response => {
-          console.log('School added successfully', response);
-        },
-        error => {
-          console.error('Error adding school', error);
-        }
-      );
+    this.isSubmitting = true;
+    const formValue = this.addSchoolForm.value;
+  
+    const model = {
+      schoolName: formValue.schoolName,
+      emailAddress: formValue.emailAddress,
+      postalAddress: formValue.postalAddress,
+      mobileNo: formValue.mobileNo,
+      postalCode: formValue.postalCode,
+      county: formValue.county,
+      subCounty: formValue.subCounty,
+      curriculumId: Number(formValue.curriculumId),
+      categoryId: Number(formValue.categoryId),
+      moeRegistrationNo: formValue.moeRegistrationNo,
+      schoolTypeId: Number(formValue.schoolTypeId),
+      schoolGenderId: Number(formValue.schoolGenderId),
+      resourceId: Number(formValue.resourceId),
+      schoolAdminEmail: formValue.schoolAdminEmail,
+      longitude: Number(formValue.longitude),
+      latitude: Number(formValue.latitude)
+    };
+  
+    const schoolFormData = new FormData();
+  
+    if (this.logoFile) {
+      schoolFormData.append('logo', this.logoFile, this.logoFile.name);
+    } else {
+      console.error("No File Selected");
+      this.isSubmitting = false;
+      return;
     }
+  
+    // Append the model data as a JSON string
+    schoolFormData.append("schoolFormData", JSON.stringify(model));
+  
+    console.log("Payload:", model);
+    console.log("FormData:", schoolFormData);
+  
+    this.apiService.addSchool(schoolFormData).subscribe(
+      (response) => {
+        console.log('School added successfully', response);
+        if (response.result.statusCode == 200) {
+          this.toastService.show('School added successfully!', 'success');
+          this.resetForm();
+        }
+      },
+      (error) => {
+        console.error('Error adding school', error);
+        this.toastService.show('Failed to add school. Please try again.', 'error');
+      }
+    ).add(() => {
+      this.isSubmitting = false;
+    });
   }
+
+
+  resetForm(): void {
+    this.addSchoolForm.reset();
+    this.logoPreviewUrl = null;
+    this.selectedEditCounty = null;
+    this.addSchoolForm.get('subCounty')?.disable();
+  }
+
+
 }

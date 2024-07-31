@@ -21,7 +21,7 @@ import {
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ReactiveFormsModule } from '@angular/forms';
 import { GeneralModule } from 'src/app/shared/components/general/general.module';
-import { SchoolCurriculumsComponent } from '../school-curriculums/school-curriculums.component';
+// import { SchoolCurriculumsComponent } from '../school-curriculums/school-curriculums.component';
 
 const SystemAdminRoutes: Routes = [
   {
@@ -47,10 +47,10 @@ const SystemAdminRoutes: Routes = [
     path: "edit-agent/:id",
     component: EditSystemAdminComponent,
   },
-  {
-    path: "School curriculum",
-    component: SchoolCurriculumsComponent,
-  },
+  // {
+  //   path: "School curriculum",
+  //   component: SchoolCurriculumsComponent,
+  // },
 ];
 @NgModule({
   declarations: [

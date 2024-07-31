@@ -32,18 +32,22 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
 
   schoolTypes: any[] = [];
   curriculums: any[] = [];
+  schoolGenders: any[] = [];
 
 
   columns = [
     { name: "Name", prop: "schoolName" },
     { name: "Category", prop: "category" },
     { name: "Curriculum", prop: "curriculum" },
-    { name: 'county', prop: 'county' },
-    { name: 'emailAddress', prop: 'emailAddress' },
-    { name: 'subCounty', prop: 'subCounty' },
+    { name: "schoolType", prop: "schoolType" },
+    { name: 'County', prop: 'county' },
+    { name: 'Email Address', prop: 'emailAddress' },
+    // { name: 'SubCounty', prop: 'subCounty' },
     { name: "Actions", prop: "actions" },
   ];
+  
   categories: any[] = [];
+
 
   constructor(
     private modalService: NgbModal,
@@ -60,6 +64,7 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
     this.getIndividualData();
     this.getCurriculums();
     this.getSchoolTypes();
+    this.getSchoolGenders();
 
 
   }
@@ -96,6 +101,21 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
     );
   }
 
+  getSchoolGenders(): void {
+    this.apiService.getSchoolGenders().subscribe(
+      (response: any) => {
+        if (response.statusCode === 200 && Array.isArray(response.result)) {
+          this.schoolGenders = response.result;
+          console.log(".......Fetched School Genders:", response.result);
+        } else {
+          console.error('Failed to fetch school genders:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching school genders:', error);
+      }
+    );
+  }
   getCategoryName(categoryId: number): string {
     const category = this.categories.find(cat => cat.categoryId === categoryId);
     return category ? category.name : '';
@@ -110,23 +130,31 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
     const schoolType = this.schoolTypes.find(type => type.schoolTypeId === schoolTypeId);
     return schoolType ? schoolType.name : '';
   }
+
   getIndividualData(): void {
     this.loading = true;
     console.log("Fetching school data...");
-
+  
     this.schoolList$ = this.apiService.getSchools().pipe(
       map((response: any) => {
         console.log("API response: ", response);
-
+  
         if (response && response.statusCode === 200 && Array.isArray(response.result)) {
           this.allRecords = response.result;
           this.rows = this.allRecords.map((item: any, index: any) => {
             const myDate = item["createdOn"] ? item["createdOn"].split(" ")[0] : '';
             const dateObj = myDate ? new Date(myDate).toString().split("GMT")[0].replace(" 03:00:00", "") : '';
-
-            return { ...item, frontendId: index + 1, createdOn: dateObj };
+  
+            return { 
+              ...item, 
+              frontendId: index + 1, 
+              createdOn: dateObj,
+              curriculumName: this.getCurriculumName(item.curriculumId),
+              schoolTypeName: this.getSchoolTypeName(item.schoolTypeId),
+              categoryName: this.getCategoryName(item.categoryId)
+            };
           });
-
+  
           console.log("Processed rows: ", this.rows);
           this.totalRecords = this.rows.length;
           this.loading = false;
@@ -134,7 +162,7 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
         } else {
           this.toastr.error("Unexpected API response format", "Error");
           this.loading = false;
-          return []; // Ensure a value is returned in all paths
+          return []; 
         }
       }),
       catchError((error: HttpErrorResponse) => {
@@ -144,10 +172,12 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
           "Error fetching schools"
         );
         this.loading = false;
-        return of([]); // Ensure a value is returned in all paths
+        return of([]); 
       })
     );
   }
+  
+
   updateColumns(updatedColumns: any) {
     this.columns = [...updatedColumns];
   }

@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { Subscription } from "rxjs";
-import { ToastrService } from "ngx-toastr";
-import { HttpServService } from "src/app/shared/services/http-serv.service";
-import * as bootstrap from "bootstrap";
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ApiService } from '../../../api.service'; // Adjust path based on your project structure
+import { EditAgentComponent } from '../edit-agent/edit-agent.component';
+import { ToastrService } from 'ngx-toastr';
+import * as bootstrap from 'bootstrap';
+
 
 @Component({
   selector: "app-agent-role",
@@ -12,101 +13,80 @@ import * as bootstrap from "bootstrap";
   styleUrls: ["./add-agent.component.scss"],
 })
 export class AddAgentComponent implements OnInit {
-  @Input() title: any;
   @Input() formData: any;
-
-  isLoading!: boolean;
-  
-  public loading = false;
-  public hasErrors = false;
-  public errorMessages: any;
-  public form!: FormGroup;
-  public addAgent$!: Subscription;
-
+  form!: FormGroup;
+  title!: string;
+  isLoading: boolean = false;
 
   constructor(
     public activeModal: NgbActiveModal,
-    public fb: FormBuilder,
-    public toastr: ToastrService,
-    private _httpService: HttpServService
-  ) {}
+    private fb: FormBuilder,
+    private modalService: NgbModal,
+    private toastr: ToastrService ,// Ensure this line is added
+    private apiService: ApiService // Adjust based on your actual service implementation
+  ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.form = this.fb.group({
-      firstName: [
-        this.formData ? this.formData.firstName : "",
-        [Validators.required],
-      ],
-      lastName: [
-        this.formData ? this.formData.lastName : "",
-        [Validators.required],
-      ],
-      middleName: [
-        this.formData ? this.formData.middleName : "",
-        [Validators.required],
-      ],
-      email: [this.formData ? this.formData.email : "", [Validators.required]],
-      phoneNumber: [
-        this.formData ? this.formData.phoneNumber : "",
-        [Validators.required],
-      ],
-      idNumber: [
-        this.formData ? this.formData.idNumber : "",
-        [Validators.required],
-      ],
+      firstName: ['', Validators.required],
+      middleName: [''],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      nationalId: [0, [Validators.required, Validators.min(0)]],
+      phoneNo: ['', Validators.required],
+      agencyName: ['', Validators.required],
+      EmergencyContact: ['', Validators.required],
+      profileId: [3] // Setting profileId to 1 for system admin
+    });
+
+    if (this.formData) {
+      this.form.patchValue(this.formData);
+      this.title = 'Edit Agent';
+    } else {
+      this.title = 'Add Agent';
+    }
+  }
+
+  openEditAgentsModal(formData: any) {
+    const modalRef = this.modalService.open(EditAgentComponent, {
+      centered: true,
+      backdrop: 'static'
+    });
+    modalRef.componentInstance.formData = formData;
+
+    modalRef.result.then((result) => {
+      if (result.status === 'success') {
+        // Handle the success result
+      }
+    }).catch((error) => {
+      console.log(error);
     });
   }
 
-  public submitData(): void {
-    this.loading = true;
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      this.loading = false;
-      return;
-    }
-    this.createRecord();
+  closeModal() {
+    this.activeModal.dismiss('Cross click');
   }
 
-
-
-  private createRecord(): any {
-    this.isLoading = true;
-    const model = {
-      firstName: this.form.value.firstName,
-      middleName: this.form.value.middleName,
-      lastName: this.form.value.lastName,
-      email: this.form.value.email,
-      phoneNumber: this.form.value.phoneNumber,
-      idNumber: this.form.value.idNumber,
-      channel: "APP",
-    };
-
-    this.addAgent$ = this._httpService
-      .postReq("portal/api/v1/agents/save", model)
-      .subscribe(
-        (result: any) => {
+  submitData() {
+    if (this.form.valid) {
+      this.isLoading = true;
+      const formData = this.form.value;
+  
+      this.apiService.addAgent(formData).subscribe(
+        (response) => {
           this.isLoading = false;
-          if (result.status === 0) {
-            this.activeModal.close("success");
-            this.toastr.success(result?.message, "Success");
-          } else {
-            this.hasErrors = true;
-            this.errorMessages = result?.message;
-            this.toastr.error(result?.message, "Error");
-          }
+          // Handle the success result
+          this.activeModal.close({ status: 'success', data: response });
         },
         (error) => {
           this.isLoading = false;
-          this.hasErrors = true;
-          this.errorMessages = error?.message;
-          this.toastr.error(error?.message, "Error");
+          console.error('Error adding system admin:', error);
+          // Handle error as per your application's requirements
+          // Example: Show an error message using Toastr or log errors
+          this.toastr.error('Failed to add system admin.', 'Error');
         }
       );
-  }
-  closeModal(id: string): void {
-    const modal = bootstrap.Modal.getInstance(document.getElementById(id)!);
-    if (modal) {
-      modal.hide();
     }
   }
+  
 }

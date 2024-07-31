@@ -34,20 +34,18 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
   curriculums: any[] = [];
   schoolGenders: any[] = [];
 
-
   columns = [
     { name: "Name", prop: "schoolName" },
-    { name: "Category", prop: "categoryId" },
-    { name: "Curriculum", prop: "curriculumId" },
-    { name: "schoolType", prop: "schoolTypeId" },
+    { name: "Category", prop: "category" },
+    { name: "Curriculum", prop: "curriculum" },
+    { name: "schoolType", prop: "schoolType" },
     { name: 'County', prop: 'county' },
     { name: 'Email Address', prop: 'emailAddress' },
-    { name: 'SubCounty', prop: 'subCounty' },
+    // { name: 'SubCounty', prop: 'subCounty' },
     { name: "Actions", prop: "actions" },
   ];
   
   categories: any[] = [];
-
 
   constructor(
     private modalService: NgbModal,
@@ -65,16 +63,14 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
     this.getCurriculums();
     this.getSchoolTypes();
     this.getSchoolGenders();
-
-
   }
+
   getSchoolTypes(): void {
     this.apiService.getSchoolTypes().subscribe(
       (response: any) => {
         if (response.statusCode === 200 && Array.isArray(response.result)) {
           this.schoolTypes = response.result;
-          console.log(" ....fetched SchoolTypes",response.result);
-          
+          console.log(" ....fetched SchoolTypes", response.result);
         } else {
           console.error('Failed to fetch school types:', response);
         }
@@ -84,13 +80,13 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
       }
     );
   }
+
   getCurriculums(): void {
     this.apiService.getCurriculums().subscribe(
       (response: any) => {
         if (response.statusCode === 200 && Array.isArray(response.result)) {
           this.curriculums = response.result;
-          console.log(" ....fetched curriculum",response.result);
-
+          console.log(" ....fetched curriculum", response.result);
         } else {
           console.error('Failed to fetch curriculums:', response);
         }
@@ -116,6 +112,7 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
       }
     );
   }
+
   getCategoryName(categoryId: number): string {
     const category = this.categories.find(cat => cat.categoryId === categoryId);
     return category ? category.name : '';
@@ -176,7 +173,6 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
       })
     );
   }
-  
 
   updateColumns(updatedColumns: any) {
     this.columns = [...updatedColumns];
@@ -190,7 +186,7 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
     let eventData = JSON.parse(data);
     console.log('Event Data:', eventData);
   
-    if (eventData.action == "View") {
+    if (eventData.action === "View") {
       if (eventData.row && eventData.row.schoolId) {
         this.viewedSchool = eventData.row.schoolId;
         this.router.navigate([`/schools/view-school/${this.viewedSchool}`]);
@@ -199,7 +195,11 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
         console.error('School ID is undefined');
         this.toastr.error('Unable to view school. School ID is missing.', 'Error');
       }
-    } 
+    } else if (eventData.action === "Edit") {
+      this.openEditSchoolModal(eventData.row);
+    } else if (eventData.action === "Delete") {
+      this.confirmDeleteSchool(eventData.row);
+    }
   }
 
   searchResultUniversal(event: any) {
@@ -240,22 +240,42 @@ export class ListSchoolsComponent implements OnInit, OnDestroy {
     );
   }
 
-  editSchool(formData: any) {
-    this.modalRef = this.modalService.open(EditSchoolComponent, {
+  openEditSchoolModal(schoolData: any) {
+    const modalRef = this.modalService.open(EditSchoolComponent, {
       centered: true,
-      animation: true,
+      backdrop: 'static'
     });
+    modalRef.componentInstance.schoolData = schoolData;  // Make sure this data is correct
+    modalRef.componentInstance.title = "Edit School";
+  
+    modalRef.result.then((result) => {
+      if (result === "success") {
+        this.getIndividualData();  // Refresh the list after editing
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
 
-    this.modalRef.componentInstance.formData = formData;
-    this.modalRef.componentInstance.title = "Edit School";
-    this.modalRef.result.then(
-      (result) => {
-        if (result === "success") {
-          this.getIndividualData();
-        }
+  confirmDeleteSchool(row: any) {
+    if (confirm(`Are you sure you want to delete ${row.schoolName}?`)) {
+      this.deleteSchool(row.schoolId); // Adjust `row.schoolId` if needed
+    }
+  }
+
+  deleteSchool(schoolId: number) {
+    this.apiService.deleteSchool(schoolId).subscribe(
+      () => {
+        this.toastr.success('School deleted successfully', 'Success');
+        this.getIndividualData(); // Refresh the list after deletion
       },
-      (reason) => {
-        console.log(reason);
+      (error) => {
+        console.error('Error deleting school:', error);
+        if (error.status === 403) {
+          this.toastr.error('Permission denied to delete school', 'Error');
+        } else {
+          this.toastr.error('Failed to delete school', 'Error');
+        }
       }
     );
   }

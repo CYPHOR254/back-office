@@ -41,6 +41,7 @@ export interface Partner {
   emergencyContact: string;
   businessContact: string;
   businessEmail: string;
+  resource: string;
   agreementStartDate: Date;
   agreementEndDate: Date;
 }
@@ -90,6 +91,22 @@ export interface Curriculum {
   curriculumId: number;
   curriculum: string;
 }
+export interface Resource {
+  resourceId: number;
+  resource: string;
+}
+export interface Subject {
+  subject: string;
+}
+
+export interface TeacherSubjectsResponse {
+  statusCode: number;
+  statusMessage: string;
+  result: {
+    subjectTeacherDTOList: Subject[];
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -100,17 +117,15 @@ export class ApiService {
 
   // Authentication and User Management
 
-  login(payload: { email: string; password: string}): Observable<any> {
+  login(payload: { email: string; password: string }): Observable<any> {
     const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
     return this.http.post<{ status: number; message: string; data: any }>(`${this.authUrl}/user/all/login`, payload, { headers });
   }
-
 
   getSystemAdmins(): Observable<any> {
     const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
     return this.http.get<any>(`${this.baseUrl}/eduAdmin/admins`, { headers });
   }
-  
 
   addSystemAdmins(user: systemAdmins): Observable<systemAdmins> {
     return this.http.post<{ statusCode: number, statusMessage: string, result: systemAdmins }>(`${this.baseUrl}/user/all/register`, user)
@@ -128,72 +143,131 @@ export class ApiService {
 
   // Agent Management
 
-  getAgents(): Observable<Agent[]> {
-    return this.http.get<{ statusCode: number, statusMessage: string, result: Agent[] }>(`${this.baseUrl}/agent/agents`)
-      .pipe(map(response => response.result));
+  getAgents(): Observable<any> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/eduAdmin/agents`, { headers });
+
   }
 
   addAgent(agent: Agent): Observable<Agent> {
-    return this.http.post<{ statusCode: number, statusMessage: string, result: Agent }>(`${this.baseUrl}/agent/add-agent`, agent)
+    return this.http.post<{ statusCode: number, statusMessage: string, result: Agent }>(`${this.baseUrl}/user/all/register`, agent)
       .pipe(map(response => response.result));
   }
 
+  getAgentById(agentId: number): Observable<any> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/eduAdmin/agent/${agentId}`, { headers });
+  }
+
+  getSchoolsAddedByAgent(agentId: number): Observable<any> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/agent/agent/${agentId}/schools-per-agent`, { headers });
+  }
+  
   updateAgent(agentId: number, agent: Agent): Observable<Agent> {
-    return this.http.put<{ statusCode: number, statusMessage: string, result: Agent }>(`${this.baseUrl}/agent/update-agent/${agentId}`, agent)
+    return this.http.put<{ statusCode: number, statusMessage: string, result: Agent }>(
+      `${this.baseUrl}/eduAdmin/update-agent/${agentId}`, agent)
       .pipe(map(response => response.result));
   }
+  
+
+
 
   deleteAgent(agentId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/agent/delete-agent/${agentId}`);
+    return this.http.delete<void>(`${this.baseUrl}/eduAdmin/agent/${agentId}`);
   }
 
   // Partner Management
 
   getPartners(): Observable<Partner[]> {
-    return this.http.get<{ statusCode: number, statusMessage: string, result: Partner[] }>(`${this.baseUrl}/partner/partners`)
-      .pipe(map(response => response.result));
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/eduAdmin/partners`, { headers });
+
   }
 
+  getPartnerById(partnerId: number): Observable<any> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/eduAdmin/partner/${partnerId}`, { headers });
+  }
   addPartner(partner: Partner): Observable<Partner> {
-    return this.http.post<{ statusCode: number, statusMessage: string, result: Partner }>(`${this.baseUrl}/partner/add-partner`, partner)
+    return this.http.post<{ statusCode: number, statusMessage: string, result: Partner }>(`${this.baseUrl}/user/all/register`, partner)
       .pipe(map(response => response.result));
   }
 
   updatePartner(partnerId: number, partner: Partner): Observable<Partner> {
-    return this.http.put<{ statusCode: number, statusMessage: string, result: Partner }>(`${this.baseUrl}/partner/update-partner/${partnerId}`, partner)
-      .pipe(map(response => response.result));
+    return this.http.put<{ statusCode: number, statusMessage: string, result: Partner }>(
+      `${this.baseUrl}/eduAdmin/partner/${partnerId}`,
+      partner
+    ).pipe(map(response => response.result));
   }
 
   deletePartner(partnerId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/partner/delete-partner/${partnerId}`);
+    return this.http.delete<void>(`${this.baseUrl}/eduAdmin/del-partner/${partnerId}`);
+  }
+  // http://localhost:8080/v1/schAdmin/all-students
+  getStudents(): Observable<Teacher[]> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/schAdmin/all-students`, { headers });
   }
 
+  getStudentById(studentId: number): Observable<any> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/schAdmin/student/${studentId}`, { headers });
+  }
+ 
+  deleteStudent(teacherId: number): Observable<void> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.delete<void>(`${this.baseUrl}/schAdmin/del-student/${teacherId}`, { headers });
+  }
   // Teacher Management
 
   getTeachers(): Observable<Teacher[]> {
-    return this.http.get<{ statusCode: number, statusMessage: string, result: Teacher[] }>(`${this.baseUrl}/schAdmin/teachers`)
-      .pipe(map(response => response.result));
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/schAdmin/teachers`, { headers });
+  }
+  
+  getTeacherById(teacherId: number): Observable<any> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/schAdmin/student/${teacherId}`, { headers });
   }
 
   addTeacher(teacher: Teacher): Observable<Teacher> {
-    return this.http.post<{ statusCode: number, statusMessage: string, result: Teacher }>(`${this.baseUrl}/schAdmin/add-teacher`, teacher)
+    return this.http.post<{ statusCode: number, statusMessage: string, result: Teacher }>(`${this.baseUrl}/user/all/register`, teacher)
       .pipe(map(response => response.result));
   }
 
   updateTeacher(teacherId: number, teacher: Teacher): Observable<Teacher> {
-    return this.http.put<{ statusCode: number, statusMessage: string, result: Teacher }>(`${this.baseUrl}/schAdmin/update-teacher/${teacherId}`, teacher)
-      .pipe(map(response => response.result));
+    return this.http.put<{ statusCode: number, statusMessage: string, result?: Teacher }>(`${this.baseUrl}/schAdmin/teacher/${teacherId}`, teacher)
+      .pipe(
+        map(response => {
+          if (response.statusCode === 200 && response.result) {
+            return response.result;
+          } else {
+            throw new Error('Failed to update teacher');
+          }
+        })
+      );
   }
 
   deleteTeacher(teacherId: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/schAdmin/delete-teacher/${teacherId}`);
   }
-// Category Management 
+  // Category Management 
   getCategories(): Observable<Category[]> {
     const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
     return this.http.get<any>(`${this.baseUrl}/agent/category`, { headers });
   }
+  getResources(): Observable<Resource[]> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/eduAdmin/resources`, { headers });
+  }
 
+  // fetch meniu codes
+
+  getMenuOutline(): Observable<Curriculum[]> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/agent/menu-codes`, { headers });
+  }
   // Curriculum Management 
 
   getCurriculums(): Observable<Curriculum[]> {
@@ -240,24 +314,29 @@ export class ApiService {
     return this.http.delete<void>(`${this.baseUrl}/agent/delete-school-type/${schoolTypeId}`);
   }
 
-
   getSchools(): Observable<any> {
     const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
-
     return this.http.get<any>(`${this.baseUrl}/agent/schools`, { headers });
   }
-
+  getRejected(): Observable<any> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/agent/approved-schools`, { headers });
+  }
 
   getSchoolById(schoolId: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/agent/schools/${schoolId}`);
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<any>(`${this.baseUrl}/agent/school/${schoolId}`, { headers });
   }
 
-  addSchool(school: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/agent/schools`, school);
-  }
+  addSchool(schoolData: FormData): Observable<any> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true')
+    return this.http.post<{ statusCode: number, statusMessage: string, result: any }>(
+      `${this.baseUrl}/agent/school`, schoolData, { headers }
+    ).pipe(map(response => response.result));
+  {}}
 
-  updateSchool(schoolId: number, school: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/agent/schools/${schoolId}`, school);
+  updateSchool(schoolId: number, updatedSchoolData: any): Observable<any> {
+    return this.http.put(`/api/schools/${schoolId}`, updatedSchoolData);
   }
 
   deleteSchool(schoolId: number): Observable<any> {
@@ -285,28 +364,14 @@ export class ApiService {
     return this.http.delete<void>(`${this.baseUrl}/schAdmin/delete-guardian/${guardianId}`);
   }
 
+  getTeacherSubjects(teacherId: number): Observable<TeacherSubjectsResponse> {
+    const headers = new HttpHeaders().set('ngrok-skip-browser-warning', 'true');
+    return this.http.get<TeacherSubjectsResponse>(`${this.baseUrl}/schAdmin/teacher/${teacherId}/subjects` , { headers });
+  }
 
+  assignSubjectToTeacher(teacherId: number, subject: string): Observable<any> {
+    // Replace with your actual API endpoint and method
+    return this.http.post<any>(`/api/teacher/${teacherId}/subjects`, { subject });
+  }
+  
 }
-
-
-
-// getSchoolTypes(): Observable<SchoolType[]> {
-//   return this.http.get<{ statusCode: number, statusMessage: string, result: SchoolType[] }>(`${this.agentUrl}/school-type`)
-//     .pipe(map(response => response.result));
-// }
-
-// addSchoolType(schoolType: { name: string }): Observable<SchoolType> {
-//   return this.http.post<{ statusCode: number, statusMessage: string, result: SchoolType }>(`${this.agentUrl}/school-type`, schoolType)
-//     .pipe(map(response => response.result));
-// }
-
-// updateSchoolType(schoolTypeId: number, updatedSchoolType: { name: string }): Observable<SchoolType> {
-//   return this.http.put<{ statusCode: number, statusMessage: string, result: SchoolType }>(`${this.agentUrl}/school-type/${schoolTypeId}`, updatedSchoolType)
-//     .pipe(map(response => response.result));
-// }
-
-// deleteSchoolType(schoolTypeId: number): Observable<void> {
-//   return this.http.delete<void>(`${this.agentUrl}/school-types/${schoolTypeId}`);
-// }
-
-

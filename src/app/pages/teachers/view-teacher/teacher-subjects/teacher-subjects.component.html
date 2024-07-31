@@ -1,0 +1,22 @@
+<div *ngIf="subjects.length > 0; else noSubjects" class="subjects-container">
+  <div class="header">
+    <h3>Subjects taught</h3>
+    <button class="assign-subject-btn" (click)="toggleAssignSubject()">Assign Subject</button>
+  </div>
+  <ul>
+    <li *ngFor="let subject of subjects">{{ subject }}</li>
+  </ul>
+  
+  <div *ngIf="showAssignSubject" class="assign-subject-form">
+    <input type="text" #subjectInput placeholder="Enter subject" />
+    <button (click)="assignSubject(subjectInput.value)">Add Subject</button>
+  </div>
+</div>
+<ng-template #noSubjects>
+  <div *ngIf="errorMessage; else loading">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <ng-template #loading>
+    <p>Loading subjects...</p>
+  </ng-template>
+</ng-template>

@@ -19,6 +19,7 @@ import { HttpServService } from "src/app/shared/services/http-serv.service";
 import { AddAgentComponent } from "../add-agent/add-agent.component";
 import { EditAgentComponent } from "../edit-agent/edit-agent.component";
 import { UserActionsModalComponent } from "src/app/shared/components/user-actions-modal/user-actions-modal.component";
+import { ApiService } from "../../../api.service"; // Adjust path based on your project structure
 
 @Component({
   selector: "app-agents",
@@ -36,7 +37,7 @@ export class ListAgentsComponent implements OnInit {
   defaultNavActiveId = 1;
   allRecords: any;
   title: string = "Agents";
-  actions = ["View", "Edit", "Delete", "Activate"];
+  actions = ["View", "Edit", "Delete"];
   totalRecords: number = 0;
   subs: Subscription[] = [];
   profilesList: any[] = [];
@@ -44,20 +45,24 @@ export class ListAgentsComponent implements OnInit {
   viewedAgent: any;
 
   constructor(
-    private httpService: HttpServService,
     private modalService: NgbModal,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService // Adjust based on your actual service implementation
+
   ) {}
 
+
   columns = [
-    // {name: 'ID', prop: 'frontendId'},
+    {name: 'ID', prop: 'frontendId'},
     { name: "First Name", prop: "firstName" },
     { name: "Middle Name", prop: "middleName" },
     { name: "Last Name", prop: "lastName" },
-    { name: "Phone Number", prop: "phoneNumber" },
-    // {name: 'idNumber', prop: 'idNumber'},
-    {name: 'CreatedOn', prop: 'createOn'},
+    // { name: "Email", prop: "email" },
+    // { name: "National ID", prop: "nationalId" },
+    { name: "Phone Number", prop: "phoneNo" },
+    { name: "Agency Name", prop: "agencyName" },
+    {name: 'emergencyContact', prop: 'emergencyContact'},
     { name: "Actions", prop: "actions" },
   ];
 
@@ -69,50 +74,28 @@ export class ListAgentsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getIndividualData();
+    this.fetchAgents(); // Fetch data on component initialization
   }
 
-  getIndividualData() {
+  fetchAgents() {
     this.loading = true;
-    const model = null;
-    this.agentsList$ = this.httpService.postReq("portal/api/v1/agents/getall", model).pipe(
-      map((resp: any) => {
-        if (resp["status"] === 0) {
-          let response = resp["data"];
-          console.log(response);
-          this.allRecords = resp['data'];
-
-          this.rows = response.map((item: any, index: any) => {
-  
-
-            const res = {
-              ...item,
-              frontendId: index + 1,
-            };
-            return res;
-          });
-          this.rows = this.rows.filter((row: any) => row !== undefined);
-          this.totalRecords = this.rows.length;
-          this.loading = false;
-          return this.rows;
-        } else {
-          this.loading = false;
-          return of([]);
-        }
-      }),
-      catchError((error: any) => {
+    this.apiService.getAgents().pipe(
+      catchError(error => {
+        this.toastr.error('Failed to fetch agent admins', 'Error');
         this.loading = false;
-        if (error instanceof TimeoutError) {
-          this.toastr.error(error["message"], "API Timeout");
-        } else {
-          this.toastr.error(
-            error["statusText"] || error["message"],
-            "Data Not Fetched"
-          );
-        }
         return of([]);
       })
-    );
+    ).subscribe((response: any) => {
+      if (response.statusCode === 200) {
+        this.rows = response.result;
+        this.filteredRows = this.rows;
+        this.totalRecords = this.rows.length;
+        this.toastr.success('Fetched agent admins successfully', 'Success');
+      } else {
+        this.toastr.error('Failed to fetch agent admins', 'Error');
+      }
+      this.loading = false;
+    });
   }
   updateColumns(updatedColumns: any) {
     this.columns = [...updatedColumns];
@@ -120,22 +103,23 @@ export class ListAgentsComponent implements OnInit {
 
   triggerEvent(data: string) {
     let eventData = JSON.parse(data);
-    this.viewedAgent = eventData["row"]["id"];
-
-    if (eventData.action == "View") {
-      this.router.navigate([`/agents/view-agent/${this.viewedAgent}`]);
-    } 
-    else if (eventData.action == "Activate") {
-      this.router.navigate([`/agents/activate-agent/${this.viewedAgent}`]);
-    } 
-     else if (eventData.action == "Edit") {
-      this.editAgent(eventData.row);
-    } 
-    else if (eventData.action == "Delete") {
-      this.disableAgent(eventData.row);
+    console.log('Event Data:', eventData);
+  
+    if (eventData.action === "View") {
+      if (eventData.row && eventData.row.agentId) {
+        this.viewedAgent = eventData.row.agentId;
+        this.router.navigate([`/agents/view-agent/${this.viewedAgent}`]);
+        console.log(this.viewedAgent, 'this is the Id');
+      } else {
+        console.error('School ID is undefined');
+        this.toastr.error('Unable to view school. School ID is missing.', 'Error');
+      }
+    } else if (eventData.action === "Edit") {
+      this.openEditModal(eventData.row);
+    } else if (eventData.action === "Delete") {
+      this.confirmDeleteAgent(eventData.row);
     }
   }
-
   updateFilteredRowsEvent(data: string) {
     this.filteredRows = data;
   }
@@ -148,26 +132,7 @@ export class ListAgentsComponent implements OnInit {
     this.modalRef.result.then(
       (result) => {
         if (result === "success") {
-          this.getIndividualData();
-        }
-      },
-      (reason) => {
-        console.log(reason);
-      }
-    );
-  }
-  editAgent(formData: any) {
-    this.modalRef = this.modalService.open(EditAgentComponent, {
-      centered: true,
-      animation: true,
-    });
-
-    this.modalRef.componentInstance.formData = formData;
-    this.modalRef.componentInstance.title = "Edit Agent";
-    this.modalRef.result.then(
-      (result) => {
-        if (result === "success") {
-          this.getIndividualData();
+          // this.getIndividualData();
         }
       },
       (reason) => {
@@ -176,48 +141,6 @@ export class ListAgentsComponent implements OnInit {
     );
   }
 
-  private disableAgent(row: any) {
-    this.modalRef = this.modalService.open(UserActionsModalComponent, {
-      centered: true,
-    });
-    this.modalRef.componentInstance.title = `Delete Agent`;
-    this.modalRef.componentInstance.buttonLabel = `Delete Agent`;
-    this.modalRef.componentInstance.body = `Do you want to  Delete this Agent?`;
-    this.modalRef.result.then((result) => {
-      console.log("here is the result");
-      console.log(result);
-      if (result?.status === "success") {
-        const model = {
-          id: row.id,
-          remark: result?.remark,
-        };
-
-        let suspendAgent = this.httpService
-          .postReq("portal/api/v1/agents/delete", model)
-          .subscribe({
-            next: (resp) => {
-              if (resp["status"] === 0) {
-                this.toastr.success(resp?.message, "Sucsess");
-                this.getIndividualData();
-              } else {
-                this.toastr.error(resp?.message, "Error");
-              }
-            },
-            error: (error) => {
-              this.loading = false;
-              this.toastr.error(
-                error["statusText"] ||
-                  error["message"] ||
-                  error.error["message"],
-                "Agent not suspended."
-              );
-            },
-          });
-
-        this.subs.push(suspendAgent);
-      }
-    });
-  }
   
   searchResultUniversal(event: any) {
 
@@ -243,5 +166,40 @@ export class ListAgentsComponent implements OnInit {
     this.agentsList$ = of(filteredData);
     
   }
+  openEditModal(formData: any) {
+    const modalRef = this.modalService.open(EditAgentComponent, {
+      centered: true,
+      backdrop: 'static'
+    });
+    modalRef.componentInstance.formData = formData;
 
+    modalRef.result.then((result) => {
+      if (result.status === 'success') {
+        this.fetchAgents();
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+  confirmDeleteAgent(row: any) {
+    if (confirm(`Are you sure you want to delete ${row.firstName} ${row.lastName}?`)) {
+      this.deleteAgent(row.agentId);
+    }
+  }
+  deleteAgent(agentId: number) {
+    this.apiService.deleteAgent(agentId).subscribe(
+      () => {
+        this.toastr.success('agent admin deleted successfully', 'Success');
+        this.fetchAgents(); // Refresh the list after deletion
+      },
+      (error) => {
+        console.error('Error deleting agent admin:', error);
+        if (error.status === 403) {
+          this.toastr.error('Permission denied to delete agent admin', 'Error');
+        } else {
+          this.toastr.error('Failed to delete agent admin', 'Error');
+        }
+      }
+    );
+  }
 }

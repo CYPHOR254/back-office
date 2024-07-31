@@ -1,0 +1,26 @@
+<div class="card-body">
+    <div class="row">
+      <ul
+        ngbNav
+        #fillJustifyNav="ngbNav"
+        class="nav-tabs navbar-shadow"
+        [(activeId)]="activeId"
+      >
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>school basic Information</a>
+          <ng-template ngbNavContent>
+            <app-view-school [schoolId]="schoolId"></app-view-school>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+          <a ngbNavLink> Contact Information</a>
+          <ng-template ngbNavContent>
+            <app-view-school [schoolId]="schoolId"></app-view-school>
+          </ng-template>
+        </li>
+      </ul>
+  
+      <div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-0"></div>
+    </div>
+  </div>
+  

@@ -75,11 +75,11 @@ export class LoginComponent implements OnInit {
         this.isLoading = false;
         console.error(err);
         if (err.error?.message) {
-          this.toastr.error(err.error.message, 'Login Failure');
+          this.toastr.error( 'Invalid username or password. Please try again.');
         } else if (err.message) {
-          this.toastr.error(err.message, 'Login Failure');
+          this.toastr.error( 'Invalid username or password. Please try again.');
         } else {
-          this.toastr.error('An unexpected error occurred. Please try again.', 'Login Failure');
+          this.toastr.error('An unexpected error occurred. Please try again.', 'Invalid username or password. Please try again.');
         }
       }
     });

@@ -1,20 +1,25 @@
-<div class="container mb-5 mt-3">
-  <h6 class="mb-3">
-    {{
-      getFullName(partnerDetails?.firstName, partnerDetails?.lastName)
-    }}
-    Details
-  </h6>
-
+<div class="container mb-2">
+  <div class="col-12 col-md-4 mt-3">
+    <h6 class="mb-3">
+      {{
+        getFullName(partnerDetails?.firstName| titlecase,  partnerDetails?.middleName |titlecase,partnerDetails?.lastName | titlecase)
+      }}
+      Details
+    </h6>
+  </div>
   <div class="card">
     <div class="card-body">
       <div class="row">
         <div class="col-sm-5 col-md-6">
           <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Name:</span>
+              <span class="list-title"> Name:</span>
               <span class="text-right p-1">{{
-                getFullName(partnerDetails?.firstName, partnerDetails?.lastName)
+                getFullName(
+                  partnerDetails?.firstName| titlecase,
+                  partnerDetails?.middleName | titlecase,
+                  partnerDetails?.lastName | titlecase
+                )
               }}</span>
             </li>
             <li class="list-group-item d-flex align-items-center">
@@ -22,9 +27,9 @@
               <span class="text-right p-1">{{ partnerDetails?.email }}</span>
             </li>
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Phone Number:</span>
+              <span class="list-title">Phone Number: </span>
               <span class="text-right p-1">{{
-                partnerDetails?.phoneNumber | uppercase
+                partnerDetails?.phoneNo | titlecase
               }}</span>
             </li>
           </ul>
@@ -34,17 +39,25 @@
             <li class="list-group-item d-flex align-items-center">
               <span class="list-title">ID Number:</span>
               <span class="text-right p-1">{{
-                partnerDetails?.idNumber 
+                partnerDetails?.nationalId 
               }}</span>
             </li>
             <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Created On:</span>
-              <span class="text-right p-1">{{ partnerDetails?.createdOn | date: 'medium' }}</span>
-            </li>
-            <li class="list-group-item d-flex align-items-center">
-              <span class="list-title">Created By:</span>
+              <span class="list-title"> <b>Resource</b> </span>
               <span class="text-right p-1">{{
-                partnerDetails?.createdBy | titlecase
+                partnerDetails?.resource | titlecase
+                }}</span>
+            </li>
+            <!-- <li class="list-group-item d-flex align-items-center">
+              <span class="list-title"><b> Resource</b></span>
+              <span class="text-right p-1">{{
+                partnerDetails?.resource
+              }}</span>
+            </li> -->
+            <li class="list-group-item d-flex align-items-center">
+              <span class="list-title"><b>Emergency Contact</b></span>
+              <span class="text-right p-1">{{
+                partnerDetails?.emergencyContact | titlecase
               }}</span>
             </li>
           </ul>
@@ -52,6 +65,3 @@
       </div>
     </div>
   </div>
-
-  <router-outlet></router-outlet>
-</div>

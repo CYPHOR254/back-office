@@ -145,9 +145,10 @@ export class RejectedSchoolsComponent implements OnInit {
     this.columns = [...updatedColumns];
   }
 
-  updateFilteredRowsEvent(data: string) {
+  updateFilteredRowsEvent(data: any) {
     this.filteredRows = data;
   }
+  
 
   searchResultUniversal(event: any) {
     const filteredData = this.allRecords?.filter((item: any) => {

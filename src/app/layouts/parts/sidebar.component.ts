@@ -45,7 +45,7 @@ export class SidebarComponent implements OnInit {
         // profile: ['ROLE_SUPER-ADMIN', 'ROLE_PARTNER'],
       }, 
       {
-        title: 'Admins',
+        title: 'System Admins',
         link: '/system-admin/list-admins',
         icon: 'bi bi-person-fill-lock',
         // profile: ['ROLE_SUPER-ADMIN'],
@@ -68,12 +68,12 @@ export class SidebarComponent implements OnInit {
       //   icon: 'bi bi-person-fill-lock',
       //   profile: ['ROLE_SUPER-ADMIN'],
       // },
-      {
-        title: 'School Curriculum',
-        link: '/school-curriculum',
-        icon: 'bi bi-person-fill-lock',
-        // profile: ['ROLE_SUPER-ADMIN'],
-      },
+      // {
+      //   title: 'School Curriculum',
+      //   link: '/school-curriculum',
+      //   icon: 'bi bi-person-fill-lock',
+      //   // profile: ['ROLE_SUPER-ADMIN'],
+      // },
       {
         title: 'Emis-Schools',
         link: '',
@@ -82,12 +82,12 @@ export class SidebarComponent implements OnInit {
         childs: [
           {
             title: 'Teachers',
-            link: '/rbac/list-profiles',
+            link: '/teachers/list-teachers',
             // profile: ['ROLE_SUPER-ADMIN'],
           },
           {
             title: 'Students',
-            link: '/rbac/list-roles',
+            link: '/students/list-students',
             // profile: ['ROLE_SUPER-ADMIN'],
           },
           {

@@ -4,7 +4,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ColumnMode } from "@swimlane/ngx-datatable";
 import { Subscription } from "rxjs";
-import { HttpServService } from "src/app/shared/services/http-serv.service";
+// import { HttpServService } from "src/app/shared/services/http-serv.service";
+import { ToastrService } from "ngx-toastr";
+import { ApiService } from "src/app/api.service";
 
 @Component({
   selector: "app-partner-details",
@@ -19,7 +21,7 @@ export class PartnerDetailsComponent implements OnInit {
   rows: any = [];
   loading = true;
   reorderable = true;
-  title: string = "Schools by Partner";
+  title: string = "partners by Partner";
   actions = ["Viewpartner"];
   filteredRows: any = [];
   totalRecords: number = 0;
@@ -35,10 +37,13 @@ export class PartnerDetailsComponent implements OnInit {
 
 
   constructor(
-    private httpService: HttpServService,
+    // private httpService: HttpServService,
     public activatedRoute: ActivatedRoute,
     public fb: FormBuilder,
-    public router: Router
+    private toastr: ToastrService,
+    public router: Router,
+    private apiService: ApiService // Adjust based on your actual service implementation
+
   ) {}
 
   columns = [
@@ -48,7 +53,8 @@ export class PartnerDetailsComponent implements OnInit {
     { name: "lastName", prop: "lastName" },
     { name: "phoneNumber", prop: "phoneNumber" },
     { name: "idNumber", prop: "idNumber" },
-    { name: "createdBy", prop: "createdBy" },
+    { name: "resource", prop: "resource" },
+    
     { name: "Actions", prop: "actions" },
   ];
 
@@ -61,32 +67,33 @@ export class PartnerDetailsComponent implements OnInit {
       }
     });
 
-    this.loadData();
+    this.getPartnerDetails();
   }
 
-  private loadData(): any {
+
+  getPartnerDetails(): void {
     this.loading = true;
-
-    let loadpartnerDetails = this.httpService
-      .getReq(`portal/api/v1/partners/view/${this.partnerId}`)
+    this.apiService.getPartnerById(this.partnerId)
       .subscribe(
-        (res: any) => {
-          if (res.status === 0) {
-            console.log(res);
-
-            this.loading = false;
-            this.partnerDetails = res.data;
+        (response: any) => {
+          this.loading = false;
+          if (response.statusCode === 200) {
+            this.partnerDetails = response.result;
+            console.log("Fetched partner details:", this.partnerDetails);  // Debugging
+            // this.getMenuStatus(this.partnerDetails?.menuCodeId);
           } else {
+            this.toastr.error('Failed to fetch partner details:', response.message);
           }
         },
-        (error: any) => {}
+        (error: any) => {
+          this.loading = false;
+          this.toastr.error('Error fetching partner details:', error.message);
+        }
       );
-
-    this.subs.push(loadpartnerDetails);
   }
 
-  getFullName(firstName: any, lastName: any) {
-    let fullname: string = `${firstName} ${lastName}`;
+  getFullName(firstName: any,middleName :any, lastName: any) {
+    let fullname: string = `${firstName} ${middleName} ${lastName}`;
     fullname.toUpperCase;
     fullname = fullname.slice(0, 16);
     return fullname;

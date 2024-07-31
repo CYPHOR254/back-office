@@ -5,6 +5,8 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { ColumnMode, id } from "@swimlane/ngx-datatable";
 import { Subscription } from "rxjs";
 import { HttpServService } from "src/app/shared/services/http-serv.service";
+import { ApiService } from "src/app/api.service";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-agent-details",
@@ -19,7 +21,7 @@ export class AgentDetailsComponent implements OnInit {
   rows: any = [];
   loading = true;
   reorderable = true;
-  title: string = "Schools by agent";
+  title: string = "agents by agent";
   actions = ["Viewagent"];
   filteredRows: any = [];
   totalRecords: number = 0;
@@ -36,7 +38,10 @@ export class AgentDetailsComponent implements OnInit {
     private httpService: HttpServService,
     public activatedRoute: ActivatedRoute,
     public fb: FormBuilder,
-    public router: Router
+    private toastr: ToastrService,
+    public router: Router,
+    private apiService: ApiService // Adjust based on your actual service implementation
+
   ) {}
 
   columns = [
@@ -58,32 +63,53 @@ export class AgentDetailsComponent implements OnInit {
         this.agentId = params["id"];
       }
     });
-
-    this.loadData();
+    this.getAgentDetails();
+    // this.loadData();
   }
 
-  private loadData(): any {
-    this.loading = true;
-    this.httpService
-      .getReq(`portal/api/v1/agents/view/${this.agentId}`)
-      .subscribe(
-        (res: any) => {
-          if (res.status === 0) {
-            console.log(res);
+  // private loadData(): any {
+  //   this.loading = true;
+  //   this.httpService
+  //     .getReq(`portal/api/v1/agents/view/${this.agentId}`)
+  //     .subscribe(
+  //       (res: any) => {
+  //         if (res.status === 0) {
+  //           console.log(res);
 
-            this.loading = false;
-            this.agentDetails = res.data;
-          } 
-          else {
+  //           this.loading = false;
+  //           this.agentDetails = res.data;
+  //         } 
+  //         else {
+  //         }
+  //       },
+  //       (error: any) => {}
+  //     );
+
+  // }
+
+  getAgentDetails(): void {
+    this.loading = true;
+    this.apiService.getAgentById(this.agentId)
+      .subscribe(
+        (response: any) => {
+          this.loading = false;
+          if (response.statusCode === 200) {
+            this.agentDetails = response.result;
+            console.log("Fetched Agents details:", this.agentDetails);  // Debugging
+            // this.getMenuStatus(this.agentDetails?.menuCodeId);
+          } else {
+            this.toastr.error('Failed to fetch agent details:', response.message);
           }
         },
-        (error: any) => {}
+        (error: any) => {
+          this.loading = false;
+          this.toastr.error('Error fetching agent details:', error.message);
+        }
       );
-
   }
 
-  getFullName(firstName: any, lastName: any) {
-    let fullname: string = `${firstName} ${lastName}`;
+  getFullName(firstName: any,middleName:any , lastName: any) {
+    let fullname: string = `${firstName} ${middleName} ${lastName}`;
     fullname.toUpperCase;
     fullname = fullname.slice(0, 16);
     return fullname;

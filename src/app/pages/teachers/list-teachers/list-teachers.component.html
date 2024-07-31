@@ -1,0 +1,41 @@
+<div class="pagetitle">
+    <h1>Teacher</h1>
+
+  
+  <section class="section">
+    <div class="d-flex justify-content-end mb-2">
+      <app-custom-tbl-header
+        [rows]="TeacherList$ | async"
+        [title]="title"
+        (searchResultsEvent)="searchResultUniversal($event)"
+        (filterDateEvent)="searchResultByDate($event)"
+        [showAddButton]="true"
+        (openAddModalEvent)="addTeacher()"
+        (changeColumnsEvent)="updateColumns($event)"
+      ></app-custom-tbl-header>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card p-1">
+          <div class="table-responsive" *ngIf="!loading">
+            <app-custom-tbl
+              [columns]="columns"
+              [rows]="TeacherList$ | async"
+              [rows]="rows"
+              [loadingIndicator]="false"
+              [totalItems]="totalRecords"
+              [actions]="actions"
+              (outputEvent)="triggerEvent($event)"
+              (updateFilteredRows)="updateFilteredRowsEvent($event)"
+            >
+            </app-custom-tbl>
+          </div>
+          <div class="mx-auto text-center" *ngIf="loading">
+            <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  

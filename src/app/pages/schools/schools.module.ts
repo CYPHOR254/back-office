@@ -32,6 +32,8 @@ import { NgSelectModule } from "@ng-select/ng-select";
 import { ListSchoolsComponent } from "./list-schools/list-schools.component";
 import { AddSchoolComponent } from './add-school/add-school.component';
 import { EditSchoolComponent } from './edit-school/edit-school.component';
+import { ViewSchoolComponent } from './view-school/view-school.component';
+import { SchoolDetailsComponent } from './school-details/school-details.component';
 
 const customerRoutes: Routes = [
   {
@@ -46,7 +48,17 @@ const customerRoutes: Routes = [
     path: "view-contact/:id",
     component: ViewContactInfoComponent,
   },
-
+  // {
+  //   path: "view-school/:id",
+  //   component: ViewSchoolComponent,
+  // },
+  // {
+  //   path: "view-school/:id",
+  //   component: SchoolDetailsComponent,
+  //   children: [
+  //     { path: " ", component: ViewSchoolComponent }
+  //   ],
+  // },
 ]
 @NgModule({
   declarations: [
@@ -62,6 +74,8 @@ const customerRoutes: Routes = [
     ListSchoolsComponent,
     AddSchoolComponent,
     EditSchoolComponent,
+    ViewSchoolComponent,
+    SchoolDetailsComponent,
   ],
  
   imports: [

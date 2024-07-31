@@ -1,0 +1,77 @@
+<div class="container mb-2">
+    <div class="col-12 col-md-4 mt-3">
+      <h6 class="mb-3">
+        {{
+          getFullName(teachersDetails?.firstName| titlecase,  teachersDetails?.middleName |titlecase,teachersDetails?.lastName | titlecase)
+        }}
+        Details
+      </h6>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-5 col-md-6">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex align-items-center">
+                <span class="list-title"> Name:</span>
+                <span class="text-right p-1">{{
+                  getFullName(
+                    teachersDetails?.firstName| titlecase,
+                    teachersDetails?.middleName | titlecase,
+                    teachersDetails?.lastName | titlecase
+                  )
+                }}</span>
+              </li>
+              <li class="list-group-item d-flex align-items-center">
+                <span class="list-title">school Name:</span>
+                <span class="text-right p-1">{{ teachersDetails?.schoolName }}</span>
+              </li>
+              <li class="list-group-item d-flex align-items-center">
+                <span class="list-title">Email:</span>
+                <span class="text-right p-1">{{ teachersDetails?.email }}</span>
+              </li>
+              <li class="list-group-item d-flex align-items-center">
+                <span class="list-title">Phone Number: </span>
+                <span class="text-right p-1">{{
+                  teachersDetails?.phoneNo | titlecase
+                }}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="col-sm-5 .offset-sm-2 .col-md-6 .offset-md-0">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex align-items-center">
+                <span class="list-title">ID Number:</span>
+                <span class="text-right p-1">{{
+                  teachersDetails?.nationalId 
+                }}</span>
+              </li>
+              <li class="list-group-item d-flex align-items-center">
+                <span class="list-title"> <b>Nationality:</b> </span>
+                <span class="text-right p-1">{{
+                  teachersDetails?.nationality | titlecase
+                  }}</span>
+              </li>
+              <li class="list-group-item d-flex align-items-center">
+                <span class="list-title"> <b> Date Of Birth:</b> </span>
+                <span class="text-right p-1">{{
+                  teachersDetails?.dateOfBirth | titlecase
+                  }}</span>
+              </li>
+              <!-- <li class="list-group-item d-flex align-items-center">
+                <span class="list-title"><b> Resource</b></span>
+                <span class="text-right p-1">{{
+                  teachersDetails?.resource
+                }}</span>
+              </li> -->
+              <li class="list-group-item d-flex align-items-center">
+                <span class="list-title"><b>TCS No:</b></span>
+                <span class="text-right p-1">{{
+                  teachersDetails?.tscNo | titlecase
+                }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>

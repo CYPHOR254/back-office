@@ -8,7 +8,7 @@
     <div class="col-12 col-md-8">
       <div class="row justify-content-center">
         <div class="col-12">
-          <h5>School Name: <strong>{{ schoolDetails?.name }}</strong></h5>
+          <h5>School Name: <strong>{{ schoolDetails?.schoolName }}</strong></h5>
         </div>
         <div class="col-12">
           <p>
@@ -23,7 +23,7 @@
           Approve/Decline
         </button>
         <ul class="dropdown-menu">
-          <li>
+          <li> 
             <a class="dropdown-item" (click)="approveSchool(row)">Approve</a>
           </li>
           <li>
@@ -52,13 +52,15 @@
           <li [ngbNavItem]="i" *ngFor="let item of menuOutline; let i = index">
             <a ngbNavLink class="menu-title" style="font-weight: 600">{{ item?.name | titlecase }}</a>
             <ng-template ngbNavContent>
-              <app-view-basic-school-info [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'Basic School Information'"></app-view-basic-school-info>
-              <app-list-contact-info [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'Contact Information'"></app-list-contact-info>
-              <app-list-detailed-school-profile [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'Detailed School Profile'"></app-list-detailed-school-profile>
-              <app-list-directors [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'Directors Documents'"></app-list-directors>
-              <app-list-supporting-documents [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'Supporting Documents'"></app-list-supporting-documents>
-              <app-list-school-documents [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'School Documents'"></app-list-school-documents>
-              <app-list-financial-documents [completion_status]="getStatus(item?.name)" [completion_percentage]="getPercentage(item?.name)" [schoolId]="[schoolId]" [menuCodeId]="item?.id" [clarification]="clarification" *ngIf="item?.name == 'Financial Information'"></app-list-financial-documents>
+              <!-- <app-view-basic-school-info [schoolId]="schoolId" *ngIf="item?.name == 'Basic School Information'"></app-view-basic-school-info> -->
+              <app-view-basic-school-info [schoolId]="schoolId"   *ngIf="item?.name == 'BasicSchoolInfo'"></app-view-basic-school-info>
+
+              <app-list-contact-info [schoolId]="[schoolId]" *ngIf="item?.name == 'Contact Information'"></app-list-contact-info>
+              <app-list-detailed-school-profile [schoolId]="[schoolId]" *ngIf="item?.name == 'Detailed School Profile'"></app-list-detailed-school-profile>
+              <app-list-directors [schoolId]="[schoolId]" *ngIf="item?.name == 'Directors Documents'"></app-list-directors>
+              <app-list-supporting-documents [schoolId]="[schoolId]" *ngIf="item?.name == 'Supporting Documents'"></app-list-supporting-documents>
+              <app-list-school-documents [schoolId]="[schoolId]" *ngIf="item?.name == 'School Documents'"></app-list-school-documents>
+              <app-list-financial-documents [schoolId]="[schoolId]" *ngIf="item?.name == 'Financial Information'"></app-list-financial-documents>
             </ng-template>
           </li>
         </ul>

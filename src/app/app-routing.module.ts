@@ -10,7 +10,7 @@ import { ChangeDefaultPasswordComponent } from "./other-logins/change-default-pa
 import { ChangePasswordComponent } from "./other-logins/change-password/change-password.component";
 import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
 import { ListSystemAdminsComponent } from "./pages/system-admin/list-system-admins/list-system-admins.component";
-import { SchoolCurriculumsComponent } from "./pages/school-curriculums/school-curriculums.component";
+// import { SchoolCurriculumsComponent } from "./pages/school-curriculums/school-curriculums.component";
 
 const routes: Routes = [
   {
@@ -54,7 +54,16 @@ const routes: Routes = [
             (m) => m.PartnersModule
           ),
       },
-
+      {
+        path: "teachers",
+        loadChildren: () =>
+          import("./pages/teachers/teachers.module").then((m) => m.TeachersModule),
+      },
+      {
+        path: "students",
+        loadChildren: () =>
+          import("./pages/students/students.module").then((m) => m.StudentsModule),
+      },
       {
         path: "rbac",
         loadChildren: () =>
@@ -121,10 +130,10 @@ const routes: Routes = [
         component: UserProfileComponent,
         canActivate: [AuthGuard],
       },
-      {
-        path: 'school-curriculum',
-        component: SchoolCurriculumsComponent
-      },
+      // {
+      //   path: 'school-curriculum',
+      //   component: SchoolCurriculumsComponent
+      // },
     ],
   },
 ];

@@ -1,0 +1,48 @@
+<div class="col-12 col-md-8">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <h5> <b>Students Name:</b> <strong>{{ studentsDetails?.firstName }}</strong></h5>
+      </div>
+      <div class="col-12">
+        <!-- <p>
+          Status: <span {{schoolDetails?.status}} class="bg-status">{{ studentsDetails?.status }}</span>
+        </p> -->
+      </div>
+    </div>
+  </div> <br> 
+  <div class="card-body">
+      <div class="row">
+        <ul
+          ngbNav
+          #fillJustifyNav="ngbNav"
+          class="nav-tabs navbar-shadow"
+          [(activeId)]="activeId"
+        >
+          <li [ngbNavItem]="1">
+            <a ngbNavLink>Students Basic info Details</a>
+            <ng-template ngbNavContent>
+              <app-view-student-basic-info [studentId]="studentId"></app-view-student-basic-info>
+            </ng-template>
+          </li>
+          <!-- <li [ngbNavItem]="2"  >
+            <a ngbNavLink>Teachers Subjects</a>
+            <ng-template ngbNavContent>
+              <app-view-students-mark [studentId]="studentId"></app-view-students-mark>
+            </ng-template>
+          </li> -->
+        
+        
+         
+    
+          <!-- <li [ngbNavItem]="3">
+            <a ngbNavLink>System Logs</a>
+            <ng-template ngbNavContent>
+              <app-partner-system-logs [studentId]="studentId"></app-partner-system-logs>
+            </ng-template>
+          </li> -->
+        </ul>
+    
+        <div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-0"></div>
+      </div>
+    </div>
+    

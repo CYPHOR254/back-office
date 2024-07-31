@@ -38,7 +38,7 @@ export class ListDetailedSchoolProfileComponent implements OnInit {
   DocumentCodeList$: Observable<any> = of([]);
   profile: any;
   row: any;
-  mainProduct: any;
+  mainProduct: any; 
   imageUrl: string | undefined; // Store the image URL here
   selectedClarification: any;
   clarificationStatus: any;

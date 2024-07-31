@@ -44,18 +44,26 @@ import { CheckTokenValidityInterceptor } from "./shared/interceptors/check-token
 import { GlobalServService } from "./shared/services/global-serv.service";
 import { VersionService } from "./shared/services/version.service";
 import { FooterComponent } from "./layouts/parts/footer.component";
-import { LoginHistoryComponent } from './pages/user-profile/login-history/login-history.component';
-import { BasicInfoComponent } from './pages/user-profile/basic-info/basic-info.component';
-import { ApprovedSchoolsComponent } from './pages/user-profile/approved-schools/approved-schools.component';
-import { AddedSchoolsComponent } from './pages/user-profile/added-schools/added-schools.component';
+
+// debug
+// import { LoginHistoryComponent } from './pages/user-profile/login-history/login-history.component';
+// import { BasicInfoComponent } from './pages/user-profile/basic-info/basic-info.component';
+// import { ApprovedSchoolsComponent } from './pages/user-profile/approved-schools/approved-schools.component';
+// import { AddedSchoolsComponent } from './pages/user-profile/added-schools/added-schools.component';
+// import { ClarificationSchoolsComponent } from './pages/user-profile/clarification-schools/clarification-schools.component';
+// import { CreatedUsersComponent } from './pages/user-profile/created-users/created-users.component';
+
 import { RejectedSchoolsComponent } from './pages/user-profile/rejected-schools/rejected-schools.component';
-import { ClarificationSchoolsComponent } from './pages/user-profile/clarification-schools/clarification-schools.component';
-import { CreatedUsersComponent } from './pages/user-profile/created-users/created-users.component';
+
 import { TabOrderDirective } from "./shared/directives/TabsOrderDirective";
 import { TogglePasswordDirective } from './shared/directives/toggle-password.directive';
 import { ShowPasswordToggleComponent } from './shared/components/show-password-toggle/show-password-toggle.component';
-import { SchoolCurriculumsComponent } from "./pages/school-curriculums/school-curriculums.component";
+// import { SchoolCurriculumsComponent } from "./pages/school-curriculums/school-curriculums.component";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
+// import { TeachersComponent } from './pages/teachers/teachers.component';
+import { ApprovedSchoolsComponent } from "./pages/partners/view-partner/approved-schools/approved-schools.component";
+import { AddedSchoolsComponent } from "./pages/system-users/view-system-user/added-schools/added-schools.component";
+import { ClarificationSchoolsComponent } from "./pages/partners/view-partner/clarification-schools/clarification-schools.component";
 
 @NgModule({
   declarations: [
@@ -77,16 +85,24 @@ import { NgxDatatableModule } from "@swimlane/ngx-datatable";
     UserProfileComponent,
     ReportComponent,
     FooterComponent,
-    LoginHistoryComponent,
-    BasicInfoComponent,
-    ApprovedSchoolsComponent,
-    AddedSchoolsComponent,
+
+// debug
+    // LoginHistoryComponent,
+    // BasicInfoComponent,
+      // CreatedUsersComponent,
+      // AddedSchoolsComponent,
+    // ApprovedSchoolsComponent,
+      // ClarificationSchoolsComponent,
+  
+
     RejectedSchoolsComponent,
-    ClarificationSchoolsComponent,
-    CreatedUsersComponent,
+
+
+
     TogglePasswordDirective,
     ShowPasswordToggleComponent,
-    SchoolCurriculumsComponent,
+    // SchoolCurriculumsComponent,
+    // TeachersComponent,
   
 
 
